@@ -1,0 +1,383 @@
+.post-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Skills Section */
+.skills-section {
+  margin: 16px 0;
+}
+
+.skills-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.skills-icon {
+  font-size: 1rem;
+}
+
+.skills-label {
+  font-weight: 600;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.skills-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 2px solid;
+}
+
+.teach-badge {
+  background: #e6fffa;
+  color: #234e52;
+  border-color: #319795;
+}
+
+.learn-badge {
+  background: #fef5e7;
+  color: #7d6608;
+  border-color: #f39c12;
+}
+
+.skill-level {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.skill-badge-more {
+  padding: 6px 12px;
+  background: #cbd5e0;
+  color: #2d3748;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.post-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.post-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.post-type-icon {
+  font-size: 1rem;
+}
+
+.post-delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+  padding: 4px;
+}
+
+.post-delete-btn:hover {
+  opacity: 1;
+}
+
+.post-creator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.creator-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.creator-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.creator-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.creator-name {
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 0.95rem;
+}
+
+.creator-rating {
+  font-size: 0.85rem;
+  color: #718096;
+}
+
+.post-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin: 12px 0;
+  line-height: 1.4;
+}
+
+.post-description {
+  color: #4a5568;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-skill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.skill-icon {
+  font-size: 1rem;
+}
+
+.post-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.post-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f7fafc;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.detail-icon {
+  font-size: 1rem;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.post-tag {
+  padding: 4px 10px;
+  background: #edf2f7;
+  color: #4a5568;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.post-tag-more {
+  padding: 4px 10px;
+  background: #cbd5e0;
+  color: #2d3748;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.post-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.post-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #718096;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.interest-btn {
+  padding: 8px 16px;
+  border: 2px solid #667eea;
+  background: white;
+  color: #667eea;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.interest-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.interest-btn.interested {
+  background: #667eea;
+  color: white;
+}
+
+.post-status-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.status-badge {
+  padding: 8px 16px;
+  background: #718096;
+  color: white;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+/* Linked Course Section */
+.linked-course-section {
+  margin: 16px 0;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.linked-course-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  flex: 1;
+}
+
+.course-icon {
+  font-size: 1.2rem;
+}
+
+.course-text {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.view-course-btn {
+  padding: 8px 16px;
+  background: white;
+  color: #667eea;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.view-course-btn:hover {
+  background: #f7fafc;
+  transform: translateX(2px);
+}
+
+@media (max-width: 768px) {
+  .post-card {
+    padding: 16px;
+  }
+
+  .post-title {
+    font-size: 1.2rem;
+  }
+
+  .post-footer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .interest-btn {
+    width: 100%;
+  }
+}
