@@ -30,17 +30,7 @@ connectDB();
 
 // CORS Configuration
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173', 
-      'http://127.0.0.1:3000', 'http://127.0.0.1:3001', 'http://127.0.0.1:5173'
-    ];
-    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'],
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
@@ -94,11 +84,9 @@ app.get('/health', (req, res) => {
 // Error handling middleware
 app.use(errorHandler);
 
-// Start server if not in a serverless environment
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`🚀 SkillTrade server running on port ${PORT}`);
-  });
-}
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 SkillTrade server running on port ${PORT}`);
+});
 
 module.exports = app;

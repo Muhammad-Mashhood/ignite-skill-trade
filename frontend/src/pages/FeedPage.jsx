@@ -3,10 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getPersonalizedFeed, getTrendingPosts, togglePostInterest } from '../services/api';
 import PostCard from '../components/posts/PostCard';
-import {
-  Plus, Search, AlertCircle, Inbox, Flame, Eye, Heart,
-  BarChart3, Lightbulb, X, CheckCircle2, Target
-} from 'lucide-react';
 import './FeedPage.css';
 
 const FeedPage = () => {
@@ -158,7 +154,7 @@ const FeedPage = () => {
 
     return (
       <div className={`match-badge ${badgeClass}`}>
-        <Target size={14} className="match-icon" aria-hidden="true" />
+        <span className="match-icon">🎯</span>
         <span className="match-text">{label}</span>
         <span className="match-score">{matchScore}%</span>
       </div>
@@ -187,7 +183,7 @@ const FeedPage = () => {
             className="create-post-btn"
             onClick={() => navigate('/posts/create')}
           >
-            <Plus size={16} aria-hidden="true" /> Create Post
+            <span>➕</span> Create Post
           </button>
         </div>
 
@@ -195,7 +191,7 @@ const FeedPage = () => {
         <div className="feed-search">
           <input
             type="text"
-            placeholder="Search by title, skills, or user..."
+            placeholder="🔍 Search by title, skills, or user..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -212,7 +208,7 @@ const FeedPage = () => {
 
         {error && (
           <div className="feed-error">
-            <p><AlertCircle size={14} style={{display:'inline',verticalAlign:'middle',marginRight:6}} aria-hidden="true" />{error}</p>
+            <p>⚠️ {error}</p>
             <button onClick={fetchInitialData}>Try Again</button>
           </div>
         )}
@@ -222,7 +218,7 @@ const FeedPage = () => {
           <div className="feed-main">
             {posts.length === 0 ? (
               <div className="feed-empty">
-                <div className="empty-icon"><Inbox size={48} aria-hidden="true" /></div>
+                <div className="empty-icon">📭</div>
                 <h3>No posts in your feed yet</h3>
                 <p>Start creating posts or browsing to see personalized recommendations!</p>
                 <button
@@ -249,7 +245,7 @@ const FeedPage = () => {
 
                 {searchTerm && filteredPosts.length === 0 && (
                   <div className="no-results">
-                    <p className="empty-icon"><Search size={48} aria-hidden="true" /></p>
+                    <p className="empty-icon">🔍</p>
                     <h3>No posts found</h3>
                     <p>Try a different search term</p>
                   </div>
@@ -271,7 +267,7 @@ const FeedPage = () => {
 
                 {!searchTerm && !hasMore && posts.length > 0 && (
                   <div className="feed-end">
-                    <p><CheckCircle2 size={16} style={{display:'inline',verticalAlign:'middle',marginRight:6}} aria-hidden="true" />You've reached the end of your feed!</p>
+                    <p>🎉 You've reached the end of your feed!</p>
                     <button onClick={() => navigate('/posts')}>
                       Browse All Posts
                     </button>
@@ -286,7 +282,7 @@ const FeedPage = () => {
             {/* Trending Posts */}
             {trendingPosts.length > 0 && (
               <div className="sidebar-section trending-section">
-                <h3><Flame size={16} aria-hidden="true" /> Trending This Week</h3>
+                <h3>🔥 Trending This Week</h3>
                 <div className="trending-posts">
                   {trendingPosts.map(post => (
                     <div
@@ -306,8 +302,8 @@ const FeedPage = () => {
                         </div>
                       </div>
                       <div className="trending-stats">
-                        <span><Eye size={12} aria-hidden="true" /> {post.stats?.views || 0}</span>
-                        <span><Heart size={12} aria-hidden="true" /> {post.stats?.interests || 0}</span>
+                        <span>👁️ {post.stats?.views || 0}</span>
+                        <span>❤️ {post.stats?.interests || 0}</span>
                       </div>
                     </div>
                   ))}
@@ -317,7 +313,7 @@ const FeedPage = () => {
 
             {/* Stats */}
             <div className="sidebar-section stats-section">
-              <h3><BarChart3 size={16} aria-hidden="true" /> Your Feed Stats</h3>
+              <h3>📊 Your Feed Stats</h3>
               <div className="feed-stats">
                 <div className="stat-item">
                   <span className="stat-number">{posts.length}</span>
@@ -340,7 +336,7 @@ const FeedPage = () => {
 
             {/* Tips */}
             <div className="sidebar-section tips-section">
-              <h3><Lightbulb size={16} aria-hidden="true" /> Tips</h3>
+              <h3>💡 Tips</h3>
               <ul className="tips-list">
                 <li>Create posts with your skills to get better matches</li>
                 <li>Show interest in posts to improve recommendations</li>
