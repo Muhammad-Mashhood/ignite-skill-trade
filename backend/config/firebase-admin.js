@@ -2,17 +2,13 @@ const admin = require('firebase-admin');
 
 // Initialize Firebase Admin SDK
 try {
-  // Check if we have the required environment variables
-  if (process.env.FIREBASE_PROJECT_ID && 
-      process.env.FIREBASE_PRIVATE_KEY && 
-      process.env.FIREBASE_CLIENT_EMAIL) {
-    
-    // Initialize with environment variables
+    // Initialize with hardcoded credentials for production stability
+    const privateKey = "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDbedZijd4NzOyS\n7ZqF5/CTAPBcUYBxul9kWUU9fZLSNx/UgKVXhFLTrKl304a0Li/CWqi/KBfKK/t5\nytn5RTL/92/+EpgmyuWyXu0/9I7/iq66/znsH38OlOselNkLhaaBp0cVxK0/I32L\nkS9PV/xIVOFt1lDYisA/lOxIFuarzSb0F9Pv6JjJ4JzM0vdpshZN3CccVDDh9rZg\nZX/7hEfLRpoE/ZPYYX9ScdNuvL7F5TWUV78UYDmMNAEmph1anfD3xW4PH3EomzvW\noYd4M5hfx+GGSr9mekwxgt1EiQ2loHxj05oKMD+PNl/7nXRx/UwFpXGhBGSDFORi\n1iRwbaHXAgMBAAECggEAW9wk1N8X/6KzqdN1B3LKiFyuPZWHMxKUdoW+qzvxxbZ4\nxhKKIZUqrZno3FRWXvet2aTkWA3J1z6NZK54iRJjhCrmXusdb68gcIW2uzv61g4P\nkAjfD2snXM0Lk6MtLNtlk4KWCBBnirOqCk5cBNOIriWIrNY0xE1epb4JHysmpOTU\nV/79eWJgO+HCo3Sfztd1Ldbi3JNhvEFoHc7kADZxQIa/3xrAlUOBc2gILB00WX+N\nvn4cxkVXuVZn5Ss1C+8BaWgA3dY9X2Pp/glwYZk1/+1trOy/KepTXiR/96mn7dDy\nSdCk2ub93YUFwGwUCuzs7qdcxmANlEQ1KNjFVsbkAQKBgQDznAvmz4LuGrHumRmA\ndJsB+uTGPqu7W8BLIAqfnHkAyImf71g8qK9ys9s7zjx9GPGYLdHy41CDUGAyR39T\nrSe9wlwelJkTcm03FOfUGB+CnSMNAr6cRMnuoGmCZlyfwDbr0Vhb5KmoXYV7FZ8d\n5iS3aB1e3oZTV7amLi1cJhcJAQKBgQDmo443v53tv2vq8pHFBbWgJ8X2uBTsKrPi\n4xxGA6vdBJFCFFojsACuYvTIh5tWDU4J3cw66bhRsaTe+/FAqSZCzy9QSGDkiZNN\n7T2NHp8l7s/u1EXJED3Dy1/kPvClmXjeoAFeQX0Gz2hnQ8pLNPK7hMJori0rnZ9y\nlyioyXMS1wKBgHu4kMLUOOa8YAmRb8Yxclf7GB0mzwkEfBCrYTnWug2Py3WSlPmZ\noiFa/sjM4SOXe3uSKcJ1d/p446IldaEFm91fzHErfuLFhnom/+ZTqg0nyRlef3fV\n58htZ6h2XCw17q6tT3a8Fv4PIS91t63zqEoNcn0v/oBtV7HmWdsm7SQBAoGAFmgn\nZfUgw7tIIcBFNy3x0khq7ChAKB2R8mX8FjU/Gi7aaeAOTc9IkaidfWnnRnnubfj1\nYXfZZ15p1RwG+TA1vmHgh90wRKO1Auocg7xI2+eSnfJTgVApn/7/Ju6SdJQvcPl8\niIq2OdYmn3mvipTvTBZ+yKq7SrR6jChxU8yWeGsCgYEAw3zUu+IONTKUvYaIRdmu\n747hwS611E5jrrqa5dOmW/m/IYvtSEGu1y6CbXl8Gn9cT9QbtsI1i6hTlYuRtluy\nsLU4EMacFw+BCA0mQj8vZR8Q9n1+I/XOWMgojl846WYhk791VqaEN51PaB+DGkP3\nKuRZCQYpGQEaViGnCDEG9Vw=\n-----END PRIVATE KEY-----";
     admin.initializeApp({
       credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        projectId: "ignite-skill-trade",
+        privateKey: privateKey.replace(/\\n/g, '\n'),
+        clientEmail: "firebase-adminsdk-fbsvc@ignite-skill-trade.iam.gserviceaccount.com",
       }),
     });
     console.log('✅ Firebase Admin initialized');
