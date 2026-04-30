@@ -1,7 +1,12 @@
+/* ============================================================
+   PROPOSALS PAGE — Dark Premium
+   ============================================================ */
+
 .proposals-page {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 40px 24px;
+  animation: fadeUp 0.4s ease both;
 }
 
 .proposals-header {
@@ -9,451 +14,259 @@
 }
 
 .proposals-header h1 {
-  font-size: 2.5rem;
-  color: #2d3748;
-  margin: 0 0 8px 0;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
 }
 
 .proposals-header p {
-  color: #718096;
-  font-size: 1.1rem;
-  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
-/* Loading and Error States */
-.proposals-loading,
-.proposals-error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  text-align: center;
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.proposals-error button {
-  margin-top: 16px;
-  padding: 12px 24px;
-  background: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-/* Tabs */
 .proposals-tabs {
   display: flex;
-  gap: 12px;
+  gap: 4px;
+  background: var(--bg-elevated);
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
   margin-bottom: 24px;
-  background: white;
-  padding: 8px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.tab-btn {
+.proposals-tab {
   flex: 1;
-  padding: 14px 24px;
-  border: none;
+  padding: 10px 20px;
   background: transparent;
-  color: #718096;
+  border: none;
+  color: var(--text-secondary);
   font-weight: 600;
-  font-size: 1rem;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
+  font-size: 13px;
+  font-family: inherit;
 }
 
-.tab-btn:hover {
-  background: #f7fafc;
-  color: #4a5568;
+.proposals-tab:hover {
+  background: var(--glass-bg);
+  color: var(--text-primary);
 }
 
-.tab-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+.proposals-tab.active {
+  background: var(--gradient-brand);
   color: white;
+  box-shadow: var(--shadow-brand);
 }
 
-/* Content */
-.proposals-content {
-  min-height: 400px;
-}
-
-.proposals-grid {
+.proposals-list {
   display: grid;
-  gap: 20px;
-}
-
-/* Proposal Card */
-.proposal-card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.proposal-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-}
-
-.proposal-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #e2e8f0;
-}
-
-.proposal-type {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: #2d3748;
-  font-size: 1.1rem;
-}
-
-.type-icon {
-  font-size: 1.5rem;
-}
-
-.status-badge {
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.status-pending {
-  background: #fef5e7;
-  color: #f39c12;
-}
-
-.status-accepted {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-rejected {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.status-completed {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.status-withdrawn {
-  background: #e2e8f0;
-  color: #4a5568;
-}
-
-/* Proposal Content */
-.proposal-content {
-  display: flex;
-  flex-direction: column;
   gap: 16px;
 }
 
-.user-info {
+.proposal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  transition: all var(--transition-base);
+}
+
+.proposal-card:hover {
+  border-color: var(--border-default);
+}
+
+.proposal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+
+.proposal-user {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-.user-avatar {
-  width: 50px;
-  height: 50px;
+.proposal-avatar {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   overflow: hidden;
+  background: var(--gradient-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
   flex-shrink: 0;
 }
 
-.user-avatar img {
+.proposal-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.avatar-placeholder {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.proposal-user-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 2px;
+}
+
+.proposal-user-info p {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.proposal-status {
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
   font-weight: 700;
-  font-size: 1.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.user-name {
-  font-size: 1rem;
-  color: #4a5568;
-  margin: 0 0 4px 0;
+.proposal-status.pending {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-.user-name strong {
-  color: #2d3748;
+.proposal-status.accepted {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.proposal-status.rejected {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.proposal-body {
+  margin-bottom: 16px;
+}
+
+.proposal-body h3 {
   font-size: 1.1rem;
-}
-
-.user-rating {
-  font-size: 0.9rem;
-  color: #718096;
-  margin: 0;
-}
-
-.post-info {
-  background: #f7fafc;
-  padding: 12px 16px;
-  border-radius: 10px;
-}
-
-.post-label {
-  font-size: 0.85rem;
-  color: #718096;
-  margin: 0 0 6px 0;
-  font-weight: 600;
-}
-
-.post-title {
-  font-size: 1.1rem;
-  color: #667eea;
-  margin: 0;
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.post-title:hover {
-  color: #764ba2;
-  text-decoration: underline;
-}
-
-.offering-info {
-  background: #e6fffa;
-  border: 2px solid #319795;
-  padding: 16px;
-  border-radius: 12px;
-}
-
-.offering-label {
-  font-size: 0.9rem;
-  color: #234e52;
-  margin: 0 0 8px 0;
-  font-weight: 600;
-}
-
-.offering-skill {
+  font-weight: 700;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
-.skill-name {
-  display: inline-block;
-  padding: 8px 16px;
-  background: white;
-  color: #234e52;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.offering-description {
-  color: #2c7a7b;
-  margin: 8px 0 0 0;
+.proposal-body p {
+  font-size: 13px;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
 .proposal-message {
-  background: #f7fafc;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border-left: 4px solid #667eea;
+  padding: 14px;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
 }
 
-.message-label {
-  font-size: 0.85rem;
-  color: #718096;
-  margin: 0 0 6px 0;
-  font-weight: 600;
-}
-
-.message-text {
-  color: #4a5568;
-  margin: 0;
+.proposal-message p {
+  font-size: 13px;
+  color: var(--text-secondary);
   line-height: 1.6;
-  font-style: italic;
+  margin: 0;
 }
 
-.proposal-meta {
-  display: flex;
-  gap: 16px;
-  color: #718096;
-  font-size: 0.9rem;
-}
-
-.proposal-date {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Proposal Actions */
 .proposal-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid #e2e8f0;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.proposal-actions button {
-  flex: 1;
-  padding: 12px 20px;
+.btn-accept {
+  padding: 9px 20px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
+  font-family: inherit;
+  font-size: 13px;
 }
 
-.accept-btn {
-  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+.btn-accept:hover { transform: translateY(-1px); }
+
+.btn-reject {
+  padding: 9px 20px;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: inherit;
+  font-size: 13px;
 }
 
-.accept-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(72, 187, 120, 0.4);
+.btn-reject:hover {
+  background: rgba(239, 68, 68, 0.1);
 }
 
-.reject-btn {
-  background: white;
-  color: #e53e3e;
-  border: 2px solid #e53e3e;
+.btn-message {
+  padding: 9px 20px;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: inherit;
+  font-size: 13px;
 }
 
-.reject-btn:hover:not(:disabled) {
-  background: #fff5f5;
+.btn-message:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary-light);
 }
 
-.chat-btn,
-.schedule-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.chat-btn:hover:not(:disabled),
-.schedule-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
-}
-
-.proposal-actions button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Empty State */
 .proposals-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
   text-align: center;
-  background: white;
-  border-radius: 16px;
-  padding: 48px 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-}
-
-.empty-icon {
-  font-size: 5rem;
-  margin-bottom: 20px;
-  opacity: 0.5;
+  padding: 80px 24px;
+  color: var(--text-muted);
 }
 
 .proposals-empty h3 {
-  font-size: 1.8rem;
-  color: #2d3748;
-  margin: 0 0 12px 0;
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
-.proposals-empty p {
-  color: #718096;
-  font-size: 1.1rem;
-  margin: 0 0 24px 0;
-  max-width: 500px;
+.proposals-loading {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-muted);
 }
 
-.browse-btn {
-  padding: 14px 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.browse-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .proposals-page {
-    padding: 16px;
-  }
+  .proposals-page { padding: 20px 16px; }
+  .proposals-tabs { flex-wrap: wrap; }
+  .proposals-tab { flex: 1 1 calc(50% - 4px); }
+  .proposal-header { flex-direction: column; }
+  .proposal-actions { flex-direction: column; }
+  .btn-accept, .btn-reject, .btn-message { width: 100%; }
+}
 
-  .proposals-header h1 {
-    font-size: 2rem;
-  }
-
-  .proposals-tabs {
-    flex-direction: column;
-  }
-
-  .proposal-card {
-    padding: 20px;
-  }
-
-  .proposal-actions {
-    flex-direction: column;
-  }
-
-  .proposal-actions button {
-    width: 100%;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .proposals-page { animation: none; }
 }

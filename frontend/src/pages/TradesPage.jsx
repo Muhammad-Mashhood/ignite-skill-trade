@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { getTrades, completeTrade } from '../services/api';
+import { Loader2, CheckCircle, Clock, GraduationCap, BookOpen, Coins, Calendar, Handshake, AlertCircle, CheckSquare, RefreshCw, Star } from 'lucide-react';
 import './TradesPage.css';
 
 const TradesPage = () => {
@@ -44,12 +45,12 @@ const TradesPage = () => {
 
   const getStatusBadge = (status) => {
     const badges = {
-      pending: { text: 'Pending', color: '#FFA500', icon: '⏳' },
-      accepted: { text: 'Accepted', color: '#4CAF50', icon: '✅' },
-      'in-progress': { text: 'In Progress', color: '#2196F3', icon: '🔄' },
-      completed: { text: 'Completed', color: '#4CAF50', icon: '✓' },
-      cancelled: { text: 'Cancelled', color: '#f44336', icon: '✗' },
-      disputed: { text: 'Disputed', color: '#FF5722', icon: '⚠️' },
+      pending: { text: 'Pending', color: 'status-pending', Icon: Clock },
+      accepted: { text: 'Accepted', color: 'status-accepted', Icon: CheckCircle },
+      'in-progress': { text: 'In Progress', color: 'status-inprogress', Icon: RefreshCw },
+      completed: { text: 'Completed', color: 'status-completed', Icon: CheckCircle },
+      cancelled: { text: 'Cancelled', color: 'status-cancelled', Icon: AlertCircle },
+      disputed: { text: 'Disputed', color: 'status-disputed', Icon: AlertCircle },
     };
     return badges[status] || badges.pending;
   };
@@ -140,19 +141,22 @@ const TradesPage = () => {
             className={`filter-tab ${activeTab === 'active' ? 'active' : ''}`}
             onClick={() => setActiveTab('active')}
           >
-            🔄 Active ({trades.filter(t => ['pending', 'accepted', 'in-progress'].includes(t.status)).length})
+            <RefreshCw size={14} aria-hidden="true" />
+            Active ({trades.filter(t => ['pending', 'accepted', 'in-progress'].includes(t.status)).length})
           </button>
           <button
             className={`filter-tab ${activeTab === 'completed' ? 'active' : ''}`}
             onClick={() => setActiveTab('completed')}
           >
-            ✓ Completed ({trades.filter(t => t.status === 'completed').length})
+            <CheckCircle size={14} aria-hidden="true" />
+            Completed ({trades.filter(t => t.status === 'completed').length})
           </button>
           <button
             className={`filter-tab ${activeTab === 'pending' ? 'active' : ''}`}
             onClick={() => setActiveTab('pending')}
           >
-            ⏳ Pending ({trades.filter(t => t.status === 'pending').length})
+            <Clock size={14} aria-hidden="true" />
+            Pending ({trades.filter(t => t.status === 'pending').length})
           </button>
         </div>
       </div>
@@ -166,14 +170,15 @@ const TradesPage = () => {
 
       {error && (
         <div className="trades-error">
-          <p>⚠️ {error}</p>
+          <AlertCircle size={20} aria-hidden="true" />
+          <p>{error}</p>
           <button onClick={fetchTrades}>Try Again</button>
         </div>
       )}
 
       {!loading && !error && filteredTrades.length === 0 && (
         <div className="trades-empty">
-          <div className="empty-icon">🤝</div>
+          <div className="empty-icon"><Handshake size={48} strokeWidth={1.5} aria-hidden="true" /></div>
           <h3>No trades yet</h3>
           <p>Accept a proposal to start your first trade!</p>
           <button
@@ -201,14 +206,11 @@ const TradesPage = () => {
               >
                 <div className="trade-header">
                   <div className="trade-role">
-                    <span className="role-icon">{isTeacher ? '🎓' : '📚'}</span>
+                    <span className="role-icon">{isTeacher ? <GraduationCap size={16} aria-hidden="true" /> : <BookOpen size={16} aria-hidden="true" />}</span>
                     <span className="role-text">{role}</span>
                   </div>
-                  <div 
-                    className="status-badge" 
-                    style={{ backgroundColor: statusBadge.color }}
-                  >
-                    <span>{statusBadge.icon}</span>
+                  <div className={`status-badge ${statusBadge.color}`}>
+                    <statusBadge.Icon size={12} aria-hidden="true" />
                     <span>{statusBadge.text}</span>
                   </div>
                 </div>
@@ -232,7 +234,7 @@ const TradesPage = () => {
                       <span className="partner-name">{otherUser?.name || 'User'}</span>
                       {otherUser?.rating?.average > 0 && (
                         <span className="partner-rating">
-                          ⭐ {otherUser.rating.average.toFixed(1)}
+                          <Star size={12} fill="currentColor" aria-hidden="true" /> {otherUser.rating.average.toFixed(1)}
                         </span>
                       )}
                     </div>
@@ -241,16 +243,16 @@ const TradesPage = () => {
 
                 <div className="trade-details">
                   <div className="trade-detail">
-                    <span className="detail-icon">💰</span>
+                    <span className="detail-icon"><Coins size={14} aria-hidden="true" /></span>
                     <span className="detail-text">{trade.coinsAmount} coins</span>
                   </div>
                   <div className="trade-detail">
-                    <span className="detail-icon">⏱️</span>
+                    <span className="detail-icon"><Clock size={14} aria-hidden="true" /></span>
                     <span className="detail-text">{trade.duration} mins</span>
                   </div>
                   {trade.scheduledAt && (
                     <div className="trade-detail">
-                      <span className="detail-icon">📅</span>
+                      <span className="detail-icon"><Calendar size={14} aria-hidden="true" /></span>
                       <span className="detail-text">{formatDate(trade.scheduledAt)}</span>
                     </div>
                   )}
@@ -276,10 +278,12 @@ const TradesPage = () => {
                       onClick={(e) => handleCompleteTrade(e, trade._id, isTeacher)}
                       disabled={processingId === trade._id}
                     >
-                      {processingId === trade._id ? '⏳ Processing...' : '✅ Mark as Complete'}
+                      {processingId === trade._id
+                        ? <><Loader2 size={14} className="spin-icon" aria-hidden="true" /> Processing...</>
+                        : <><CheckSquare size={14} aria-hidden="true" /> Mark as Complete</>}
                     </button>
                     <p className="action-hint">
-                      💰 {trade.coinsAmount} coins will be transferred to you
+                      <Coins size={12} aria-hidden="true" /> {trade.coinsAmount} coins will be transferred to you
                     </p>
                   </div>
                 )}

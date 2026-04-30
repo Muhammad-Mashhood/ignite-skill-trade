@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../contexts/ToastContext';
 import { getCourses, getSkills } from '../services/api';
+import { Search, X, Lock, Star, Users, Eye, Coins } from 'lucide-react';
 import './CoursesPage.css';
 
 const CoursesPage = () => {
@@ -186,9 +187,10 @@ const CoursesPage = () => {
             {/* Search and Sort */}
             <div className="search-sort-bar">
               <div className="search-box">
+                <Search size={16} className="search-icon" aria-hidden="true" />
                 <input
                   type="text"
-                  placeholder="🔍 Search courses..."
+                  placeholder="Search courses..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -196,8 +198,9 @@ const CoursesPage = () => {
                   <button
                     className="clear-search"
                     onClick={() => setSearchTerm('')}
+                    aria-label="Clear search"
                   >
-                    ✕
+                    <X size={14} aria-hidden="true" />
                   </button>
                 )}
               </div>
@@ -236,7 +239,7 @@ const CoursesPage = () => {
                       }}
                     >
                       {course.hasAccess === false && (
-                        <span className="lock-badge">🔒</span>
+                        <span className="lock-badge"><Lock size={14} aria-hidden="true" /></span>
                       )}
                     </div>
                     
@@ -259,18 +262,18 @@ const CoursesPage = () => {
                       
                       <div className="course-stats-row">
                         <span className="stat">
-                          ⭐ {course.stats?.averageRating?.toFixed(1) || '0.0'}
+                          <Star size={12} fill="currentColor" aria-hidden="true" /> {course.stats?.averageRating?.toFixed(1) || '0.0'}
                         </span>
                         <span className="stat">
-                          👥 {course.stats?.enrollmentCount || 0}
+                          <Users size={12} aria-hidden="true" /> {course.stats?.enrollmentCount || 0}
                         </span>
                         <span className="stat">
-                          👁️ {course.stats?.views || 0}
+                          <Eye size={12} aria-hidden="true" /> {course.stats?.views || 0}
                         </span>
                       </div>
                       
                       <div className="course-footer">
-                        <span className="price">💰 {course.coinsRequired} Coins</span>
+                        <span className="price"><Coins size={14} aria-hidden="true" /> {course.coinsRequired} Coins</span>
                         {course.hasAccess === false && (
                           <span className="locked-label">Locked</span>
                         )}
@@ -281,7 +284,7 @@ const CoursesPage = () => {
               </div>
             ) : (
               <div className="empty-state">
-                <div className="empty-icon">🔍</div>
+                <div className="empty-icon"><Search size={48} strokeWidth={1.5} aria-hidden="true" /></div>
                 <h2>No courses found</h2>
                 <p>Try adjusting your search or filters</p>
                 <button className="btn-clear-filters" onClick={clearFilters}>

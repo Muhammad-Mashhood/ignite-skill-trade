@@ -1,0 +1,598 @@
+/* ============================================================
+   DARK THEME OVERRIDES — All remaining legacy pages
+   This file is imported LAST to fix any page that still has
+   hardcoded light-mode colors.
+   ============================================================ */
+
+/* ---- GLOBAL FORM ELEMENTS ---- */
+input, textarea, select {
+  background: var(--bg-input, rgba(255,255,255,0.04));
+  border: 1px solid var(--border-default, rgba(255,255,255,0.1));
+  border-radius: var(--radius-md, 8px);
+  color: var(--text-primary, #f0f0f5);
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--brand-primary, #7c3aed);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted, rgba(255,255,255,0.3));
+}
+
+/* ---- LOADING SPINNER (shared) ---- */
+.loading-spinner-small {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---- TRADES PAGE ---- */
+.trades-page {
+  padding: 40px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.trades-page h1,
+.trades-header h1 {
+  color: var(--text-primary);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.trades-page p {
+  color: var(--text-secondary);
+}
+
+.trade-card,
+.trades-page .card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-xl) !important;
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+}
+
+.trade-card:hover,
+.trades-page .card:hover {
+  border-color: var(--border-default) !important;
+  box-shadow: var(--shadow-md);
+}
+
+.trade-status {
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---- PROPOSALS PAGE ---- */
+.proposals-page {
+  padding: 40px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.proposals-page h1 {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.proposal-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-xl) !important;
+  padding: 24px;
+  transition: all var(--transition-base);
+}
+
+.proposal-card:hover {
+  border-color: var(--border-default) !important;
+}
+
+.proposal-card h3,
+.proposal-card h4 {
+  color: var(--text-primary) !important;
+}
+
+.proposal-card p {
+  color: var(--text-secondary) !important;
+}
+
+/* ---- POSTS PAGE (browse) ---- */
+.posts-page {
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.posts-page h1 {
+  color: var(--text-primary);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* ---- CREATE POST / CREATE COURSE ---- */
+.create-post-page,
+.create-course-page {
+  padding: 40px 24px;
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.create-post-page h1,
+.create-course-page h1 {
+  color: var(--text-primary);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.create-post-page .form-container,
+.create-course-page .form-container,
+.create-post-page form,
+.create-course-page form {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+}
+
+.create-post-page label,
+.create-course-page label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.create-post-page .form-group input,
+.create-post-page .form-group textarea,
+.create-post-page .form-group select,
+.create-course-page .form-group input,
+.create-course-page .form-group textarea,
+.create-course-page .form-group select {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-primary) !important;
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+.create-post-page .form-group input:focus,
+.create-post-page .form-group textarea:focus,
+.create-course-page .form-group input:focus,
+.create-course-page .form-group textarea:focus {
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+}
+
+/* Submit buttons */
+.create-post-page .submit-btn,
+.create-course-page .submit-btn,
+.create-post-page button[type="submit"],
+.create-course-page button[type="submit"] {
+  background: var(--gradient-brand) !important;
+  color: white !important;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 13px 28px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-brand);
+  transition: all var(--transition-base);
+  font-family: inherit;
+}
+
+.create-post-page .submit-btn:hover,
+.create-course-page .submit-btn:hover,
+.create-post-page button[type="submit"]:hover,
+.create-course-page button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.45);
+}
+
+/* ---- COURSE DETAIL PAGE ---- */
+.course-detail-page {
+  padding: 40px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.course-detail-page .course-header,
+.course-detail-page .course-content {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-xl) !important;
+}
+
+.course-detail-page h1,
+.course-detail-page h2,
+.course-detail-page h3 {
+  color: var(--text-primary) !important;
+}
+
+.course-detail-page p {
+  color: var(--text-secondary) !important;
+}
+
+/* ---- POST DETAIL PAGE ---- */
+.post-detail-page {
+  padding: 40px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.post-detail-page .post-content,
+.post-detail-page .detail-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-xl) !important;
+  padding: 32px;
+}
+
+.post-detail-page h1,
+.post-detail-page h2 {
+  color: var(--text-primary) !important;
+}
+
+.post-detail-page p {
+  color: var(--text-secondary) !important;
+}
+
+/* ---- INBOX / CHAT PAGE ---- */
+.inbox-page,
+.chat-page {
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.inbox-page h1 {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.chat-list-item,
+.conversation-item {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 16px;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.chat-list-item:hover,
+.conversation-item:hover {
+  background: var(--bg-hover) !important;
+  border-color: var(--border-default) !important;
+}
+
+.chat-message {
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  max-width: 70%;
+}
+
+.chat-message.sent {
+  background: rgba(124, 58, 237, 0.2) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.chat-message.received {
+  background: var(--bg-elevated) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-subtle);
+}
+
+.chat-input-area {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 12px;
+}
+
+.chat-input-area input,
+.chat-input-area textarea {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-default) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ---- MY COURSES PAGE ---- */
+.my-courses-page {
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.my-courses-page h1 {
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.my-courses-page .course-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-xl) !important;
+}
+
+/* ---- COURSES PAGE ---- */
+.courses-page {
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeUp 0.4s ease both;
+}
+
+.courses-page h1 {
+  color: var(--text-primary);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* ---- GENERIC FALLBACKS ---- */
+
+/* Any remaining white backgrounds */
+.card,
+.section,
+.panel,
+[class*="container"] {
+  color: var(--text-primary);
+}
+
+/* Links */
+a {
+  color: inherit;
+}
+
+/* Buttons */
+button {
+  font-family: inherit;
+}
+
+/* ---- NOT FOUND PAGE ---- */
+.not-found-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+}
+
+.not-found-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.18) 0%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.not-found-ghost {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  animation: ghostFloat 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes ghostFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+.not-found-page h1 {
+  font-size: clamp(5rem, 15vw, 10rem);
+  font-weight: 900;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.not-found-page h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.not-found-page p {
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  max-width: 400px;
+  font-size: 15px;
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
+}
+
+.not-found-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- COMING SOON PAGE (shared) ---- */
+.coming-soon-page {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.5s ease both;
+}
+
+.coming-soon-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 65%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.coming-soon-icon {
+  color: var(--brand-primary-light);
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.coming-soon-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--brand-primary-light);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.coming-soon-page h1 {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.coming-soon-page p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 500px;
+  line-height: 1.7;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.coming-soon-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 1;
+}
+
+.csf-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-secondary);
+  transition: all var(--transition-base);
+}
+
+.csf-item:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+}
+
+.csf-item svg {
+  color: var(--brand-primary-light);
+  flex-shrink: 0;
+}
+
+.coming-soon-page .btn {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- SCROLLBAR (WebKit) ---- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---- REDUCED MOTION ---- */
+@media (prefers-reduced-motion: reduce) {
+  .trades-page,
+  .proposals-page,
+  .posts-page,
+  .create-post-page,
+  .create-course-page,
+  .course-detail-page,
+  .post-detail-page,
+  .inbox-page,
+  .chat-page,
+  .my-courses-page,
+  .courses-page {
+    animation: none;
+  }
+}

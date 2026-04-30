@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../contexts/ToastContext';
 import { createCourse, updateCourse, getSkills, generateUrduDubbing } from '../services/api';
+import { Hourglass, Video, Lightbulb, FileText } from 'lucide-react';
 import './CreateCoursePage.css';
 
 const CreateCoursePage = () => {
@@ -504,7 +505,7 @@ const CreateCoursePage = () => {
             
             {skills.length === 0 ? (
               <div className="empty-state">
-                <p>⏳ Loading skills from database...</p>
+                <p><Hourglass size={16} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'6px'}} /> Loading skills from database...</p>
                 <p className="hint">If skills don't load, please check your internet connection or refresh the page.</p>
               </div>
             ) : (
@@ -558,7 +559,7 @@ const CreateCoursePage = () => {
                     onChange={(e) => handleVideoFileChange(video.id, e.target.files[0])}
                   />
                   {video.file && (
-                    <span className="file-name">📹 {video.file.name}</span>
+                    <span className="file-name"><Video size={16} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'4px'}} /> {video.file.name}</span>
                   )}
                 </div>
                 
@@ -582,7 +583,7 @@ const CreateCoursePage = () => {
                         placeholder="Enter the Urdu text to be dubbed..."
                         rows={4}
                       />
-                      <small>💡 The script will be converted to speech using AI after course creation</small>
+                      <small><Lightbulb size={14} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'4px'}} /> The script will be converted to speech using AI after course creation</small>
                     </div>
                   )}
                 </div>
@@ -634,7 +635,7 @@ const CreateCoursePage = () => {
                     onChange={(e) => handleDocumentFileChange(doc.id, e.target.files[0])}
                   />
                   {doc.file && (
-                    <span className="file-name">📄 {doc.file.name}</span>
+                    <span className="file-name"><FileText size={16} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'4px'}} /> {doc.file.name}</span>
                   )}
                 </div>
               </div>

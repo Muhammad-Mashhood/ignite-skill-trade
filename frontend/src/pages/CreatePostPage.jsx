@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Video, BookOpen, GraduationCap, AlertTriangle, Sparkles } from 'lucide-react';
 import { createPost, getMyCourses } from '../services/api';
 import './CreatePostPage.css';
 
@@ -172,7 +173,7 @@ const CreatePostPage = () => {
 
         {error && (
           <div className="error-message">
-            ⚠️ {error}
+            <AlertTriangle size={16} aria-hidden="true" style={{display:'inline', verticalAlign:'middle', marginRight:'6px'}} /> {error}
           </div>
         )}
 
@@ -220,7 +221,7 @@ const CreatePostPage = () => {
                   checked={formData.isOnlineSession}
                   onChange={() => setFormData(prev => ({ ...prev, isOnlineSession: true, linkedCourse: '' }))}
                 />
-                <span>📹 Online Session</span>
+                <span><Video size={16} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'6px'}} /> Online Session</span>
                 <small>Live video call sessions</small>
               </label>
               <label className="radio-option">
@@ -230,7 +231,7 @@ const CreatePostPage = () => {
                   checked={!formData.isOnlineSession}
                   onChange={() => setFormData(prev => ({ ...prev, isOnlineSession: false }))}
                 />
-                <span>📚 Course-Based</span>
+                <span><BookOpen size={16} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'6px'}} /> Course-Based</span>
                 <small>Link to one of your courses</small>
               </label>
             </div>
@@ -266,7 +267,7 @@ const CreatePostPage = () => {
           {/* Will Teach Section */}
           <div className="skills-section will-teach-section">
             <div className="section-header">
-              <h3>🎓 Skills I Will Teach</h3>
+              <h3><GraduationCap size={20} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'8px'}} /> Skills I Will Teach</h3>
               <button type="button" onClick={addWillTeachSkill} className="add-skill-btn">
                 + Add Skill
               </button>
@@ -330,7 +331,7 @@ const CreatePostPage = () => {
           {/* Want to Learn Section */}
           <div className="skills-section want-to-learn-section">
             <div className="section-header">
-              <h3>📚 Skills I Want to Learn</h3>
+              <h3><BookOpen size={20} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'8px'}} /> Skills I Want to Learn</h3>
               <button type="button" onClick={addWantToLearnSkill} className="add-skill-btn">
                 + Add Skill
               </button>
@@ -476,7 +477,7 @@ const CreatePostPage = () => {
               Cancel
             </button>
             <button type="submit" className="submit-btn" disabled={loading}>
-              {loading ? 'Creating...' : '✨ Create Post'}
+              {loading ? 'Creating...' : <><Sparkles size={16} aria-hidden="true" style={{display:'inline', verticalAlign:'text-bottom', marginRight:'6px'}} /> Create Post</>}
             </button>
           </div>
         </form>
