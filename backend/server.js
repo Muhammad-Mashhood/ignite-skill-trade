@@ -81,12 +81,24 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'SkillTrade API is running' });
 });
 
+// Diagnostic route
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    message: 'SkillTrade API is healthy',
+    timestamp: new Date().toISOString(),
+    dbStatus: require('mongoose').connection.readyState === 1 ? 'connected' : 'connecting/disconnected'
+  });
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 SkillTrade server running on port ${PORT}`);
-});
+// Conditional listen for standalone/serverless
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 SkillTrade server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
