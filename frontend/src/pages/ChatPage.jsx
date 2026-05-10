@@ -1,5 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { 
+  Send, 
+  ChevronLeft, 
+  User, 
+  Star, 
+  Clock, 
+  Check, 
+  CheckCheck, 
+  AlertCircle,
+  MessageSquare,
+  Zap,
+  MoreVertical,
+  Paperclip,
+  Image as ImageIcon,
+  ShieldCheck
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { createConversation, getMessages, sendMessage } from '../services/api';
 import './ChatPage.css';
@@ -36,7 +52,6 @@ const ChatPage = () => {
       setLoading(true);
       setError('');
 
-      // Get or create conversation
       let currentConversation = conversation;
       if (!currentConversation) {
         const convData = await createConversation(userId);
@@ -44,7 +59,6 @@ const ChatPage = () => {
         setConversation(convData);
       }
 
-      // Fetch messages
       if (currentConversation?._id) {
         const messagesData = await getMessages(currentConversation._id);
         setMessages(Array.isArray(messagesData) ? messagesData : messagesData.data || []);
@@ -53,7 +67,7 @@ const ChatPage = () => {
       setIsInitialized(true);
     } catch (err) {
       console.error('Error initializing chat:', err);
-      setError(err.message || 'Failed to load chat');
+      setError(err.message || 'Failed to initialize transmission');
     } finally {
       setLoading(false);
     }
@@ -72,7 +86,6 @@ const ChatPage = () => {
       setSending(true);
       setError('');
 
-      // Ensure we have a conversation
       let currentConversation = conversation;
       if (!currentConversation) {
         currentConversation = await createConversation(userId);
@@ -84,13 +97,12 @@ const ChatPage = () => {
       setMessages(prev => [...prev, newMessage]);
       setMessageText('');
       
-      // Reset textarea height
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
       }
     } catch (err) {
       console.error('Error sending message:', err);
-      setError(err.message || 'Failed to send message');
+      setError(err.message || 'Failed to send signal');
     } finally {
       setSending(false);
     }
@@ -98,8 +110,6 @@ const ChatPage = () => {
 
   const handleTextareaChange = (e) => {
     setMessageText(e.target.value);
-    
-    // Auto-resize textarea
     e.target.style.height = 'auto';
     e.target.style.height = Math.min(e.target.scrollHeight, 150) + 'px';
   };
@@ -113,36 +123,25 @@ const ChatPage = () => {
 
   const formatMessageTime = (date) => {
     if (!date) return '';
-    
     const messageDate = new Date(date);
     const now = new Date();
     const diffInHours = (now - messageDate) / (1000 * 60 * 60);
 
     if (diffInHours < 24) {
-      return messageDate.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
-        minute: '2-digit',
-        hour12: true 
-      });
+      return messageDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     }
-    
-    return messageDate.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit'
-    });
+    return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   };
 
   const otherUser = conversation?.otherUser || 
                     conversation?.participants?.find(p => p._id !== user?._id);
 
-  if (loading) {
+  if (loading && messages.length === 0) {
     return (
       <div className="chat-page">
-        <div className="chat-loading">
-          <div className="spinner"></div>
-          <p>Loading chat...</p>
+        <div className="editorial-loader">
+          <div className="loader-bar"></div>
+          <span className="loader-text">INITIALIZING SIGNAL</span>
         </div>
       </div>
     );
@@ -150,76 +149,85 @@ const ChatPage = () => {
 
   return (
     <div className="chat-page">
-      <div className="chat-container">
+      <div className="chat-interface">
         {/* Chat Header */}
-        <div className="chat-header">
-          <button className="back-button" onClick={() => navigate('/inbox')}>
-            ← Back
+        <header className="chat-header">
+          <button className="btn-back-nodal" onClick={() => navigate('/inbox')}>
+            <ChevronLeft size={20} />
           </button>
-          <div className="chat-user-info">
-            {otherUser?.avatar ? (
-              <img src={otherUser.avatar} alt={otherUser.name} className="chat-avatar" />
-            ) : (
-              <div className="chat-avatar-placeholder">
-                {otherUser?.name?.charAt(0).toUpperCase() || '?'}
-              </div>
-            )}
-            <div className="chat-user-details">
-              <h2>{otherUser?.name || 'Unknown User'}</h2>
-              {otherUser?.rating && (
-                <span className="chat-user-rating">
-                  ⭐ {otherUser.rating.average.toFixed(1)} ({otherUser.rating.count} reviews)
-                </span>
+          
+          <div className="chat-participant-context">
+            <div className="avatar-nodal">
+              {otherUser?.avatar ? (
+                <img src={otherUser.avatar} alt={otherUser.name} />
+              ) : (
+                <User size={18} />
               )}
+              <div className="online-indicator"></div>
+            </div>
+            <div className="participant-meta">
+              <div className="name-row">
+                <h3>{otherUser?.name || 'ANONYMOUS'}</h3>
+                {otherUser?.rating && <span className="rating-badge"><Star size={8} fill="currentColor" /> {otherUser.rating.average.toFixed(1)}</span>}
+              </div>
+              <span className="status-text">ENCRYPTED CHANNEL</span>
             </div>
           </div>
-        </div>
+
+          <div className="header-actions">
+            <button className="btn-icon-editorial"><ShieldCheck size={18} /></button>
+            <button className="btn-icon-editorial"><MoreVertical size={18} /></button>
+          </div>
+        </header>
 
         {/* Messages Area */}
-        <div className="messages-area">
+        <main className="chat-feed">
           {error && (
-            <div className="chat-error">
-              <p>⚠️ {error}</p>
+            <div className="editorial-error-banner">
+              <AlertCircle size={14} />
+              <span>{error}</span>
             </div>
           )}
 
           {messages.length === 0 ? (
-            <div className="no-messages">
-              <p className="empty-icon">💬</p>
+            <div className="empty-feed-state">
+              <div className="visual">
+                <MessageSquare size={48} strokeWidth={1} />
+              </div>
               <h3>No messages yet</h3>
-              <p>Start the conversation by sending a message</p>
+              <p>Say hello to {otherUser?.name || 'your contact'} and start the conversation.</p>
             </div>
           ) : (
             <div className="messages-list">
               {messages.map((message) => {
-                // Compare MongoDB _id for accurate message ownership
-                const isOwnMessage = message.sender?._id === user?._id || 
-                                   message.sender === user?._id;
+                const isOwnMessage = message.sender?._id === user?._id || message.sender === user?._id;
                 
                 return (
                   <div
                     key={message._id}
-                    className={`message-item ${isOwnMessage ? 'own-message' : 'other-message'}`}
+                    className={`message-ledger-item ${isOwnMessage ? 'outgoing' : 'incoming'}`}
                   >
                     {!isOwnMessage && (
-                      <div className="message-avatar">
+                      <div className="msg-avatar-nodal">
                         {message.sender?.avatar ? (
                           <img src={message.sender.avatar} alt={message.sender.name} />
                         ) : (
-                          <div className="avatar-placeholder">
-                            {message.sender?.name?.charAt(0).toUpperCase() || '?'}
-                          </div>
+                          <User size={12} />
                         )}
                       </div>
                     )}
-                    <div className="message-content">
-                      <div className="message-bubble">
+                    <div className="message-envelope">
+                      <div className="bubble">
                         <p>{message.content}</p>
                       </div>
-                      <span className="message-time">
-                        {formatMessageTime(message.createdAt)}
-                        {isOwnMessage && message.isRead && ' · Read'}
-                      </span>
+                      <div className="message-meta">
+                        <span className="timestamp">{formatMessageTime(message.createdAt)}</span>
+                        {isOwnMessage && (
+                          <span className="delivery-status">
+                            {message.isRead ? <CheckCheck size={12} className="read" /> : <Check size={12} />}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 );
@@ -227,27 +235,34 @@ const ChatPage = () => {
               <div ref={messagesEndRef} />
             </div>
           )}
-        </div>
+        </main>
 
-        {/* Message Input */}
-        <form className="message-input-container" onSubmit={handleSendMessage}>
-          <textarea
-            ref={textareaRef}
-            value={messageText}
-            onChange={handleTextareaChange}
-            onKeyPress={handleKeyPress}
-            placeholder="Type a message... (Shift + Enter for new line)"
-            rows="1"
-            disabled={sending}
-          />
-          <button 
-            type="submit" 
-            className="send-button"
-            disabled={!messageText.trim() || sending}
-          >
-            {sending ? '⏳' : '📤'}
-          </button>
-        </form>
+        {/* Message Input Area */}
+        <footer className="chat-controls">
+          <div className="input-toolbar">
+            <button className="btn-tool"><Paperclip size={18} /></button>
+            <button className="btn-tool"><ImageIcon size={18} /></button>
+          </div>
+          
+          <form className="signal-input-cluster" onSubmit={handleSendMessage}>
+            <textarea
+              ref={textareaRef}
+              value={messageText}
+              onChange={handleTextareaChange}
+              onKeyPress={handleKeyPress}
+              placeholder="ENTER SIGNAL..."
+              rows="1"
+              disabled={sending}
+            />
+            <button 
+              type="submit" 
+              className="btn-send-signal"
+              disabled={!messageText.trim() || sending}
+            >
+              {sending ? <Clock size={18} className="spin" /> : <Send size={18} />}
+            </button>
+          </form>
+        </footer>
       </div>
     </div>
   );

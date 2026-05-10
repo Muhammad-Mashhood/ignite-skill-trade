@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { UserPlus, Cpu, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import './AuthPages.css';
@@ -15,7 +16,6 @@ const RegisterPage = () => {
   const { showSuccess, showError } = useToast();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');
@@ -42,71 +42,115 @@ const RegisterPage = () => {
 
     setLoading(true);
     try {
-      console.log('📝 Attempting registration for:', email);
       await register(name, email, password);
-      console.log('✅ Registration successful, waiting for auth state update...');
-      showSuccess('Registration successful! Redirecting...');
-      // The useEffect will handle navigation once isAuthenticated updates
+      showSuccess('Account created! Welcome to SkillTrade.');
     } catch (error) {
-      console.error('❌ Registration error:', error);
-      showError(error.message || 'Registration failed. Please try again.');
+      showError(error.message || 'Sign up failed. Please try again.');
       setLoading(false);
     }
   };
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
-        <h1>Join SkillTrade</h1>
-        <p className="auth-subtitle">Start trading skills today!</p>
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-              required
-            />
+      <div className="auth-registry-container">
+        <div className="auth-status-bar">
+          <div className="status-indicator active" />
+          <span className="status-text">Create your SkillTrade account</span>
+        </div>
+
+        <div className="auth-card-nodal">
+          <div className="auth-header-tactical">
+            <div className="auth-icon-box">
+              <Cpu size={32} strokeWidth={1.5} />
+            </div>
+            <div className="auth-title-group">
+              <h1 className="auth-primary-title">Sign Up</h1>
+              <span className="auth-secondary-label">Join the skill sharing network</span>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-            />
+
+          <form onSubmit={handleSubmit} className="auth-form-tactical">
+            <div className="input-ledger-group">
+              <label className="input-tactical-label">Full Name</label>
+              <input
+                type="text"
+                className="input-tactical"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
+                required
+              />
+            </div>
+
+            <div className="input-ledger-group">
+              <label className="input-tactical-label">Email Address</label>
+              <input
+                type="email"
+                className="input-tactical"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                required
+              />
+            </div>
+
+            <div className="input-ledger-group">
+              <label className="input-tactical-label">Password</label>
+              <input
+                type="password"
+                className="input-tactical"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••••••"
+                required
+              />
+            </div>
+
+            <div className="input-ledger-group">
+              <label className="input-tactical-label">Confirm Password</label>
+              <input
+                type="password"
+                className="input-tactical"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••••••"
+                required
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="btn-auth-tactical" 
+              disabled={loading}
+            >
+              {loading ? (
+                'Creating account...'
+              ) : (
+                <>
+                  Create Account <ArrowRight size={18} />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="auth-footer-tactical">
+            <span className="footer-label">Already have an account?</span>
+            <Link to="/login" className="footer-link">
+              Sign In
+            </Link>
           </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-            />
+        </div>
+
+        <div className="auth-telemetry-tray">
+          <div className="telemetry-point">
+            <span className="point-label">Account Type</span>
+            <span className="point-value">ST-X2</span>
           </div>
-          <div className="form-group">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm your password"
-              required
-            />
+          <div className="telemetry-point">
+            <span className="point-label">STATUS</span>
+            <span className="point-value">ONLINE</span>
           </div>
-          <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-            {loading ? 'Creating Account...' : 'Create Account'}
-          </button>
-        </form>
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
+        </div>
       </div>
     </div>
   );

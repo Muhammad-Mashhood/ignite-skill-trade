@@ -1,5 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Repeat, 
+  Trash2, 
+  Star, 
+  Zap, 
+  Search, 
+  BookOpen, 
+  Clock, 
+  Users, 
+  Eye, 
+  ChevronRight,
+  ArrowRight,
+  BadgeCheck,
+  Target
+} from 'lucide-react';
 import './PostCard.css';
 
 const PostCard = ({ post, onInterestToggle, onDelete, isOwner }) => {
@@ -25,170 +40,137 @@ const PostCard = ({ post, onInterestToggle, onDelete, isOwner }) => {
     navigate(`/posts/${post._id}`);
   };
 
-  const getTypeIcon = (type) => {
-    if (type === 'trade') {
-      return '�';
-    }
-    return '📌';
-  };
-
   const getTypeLabel = (type) => {
-    if (type === 'trade') {
-      return 'Trade Skills';
-    }
-    return type.charAt(0).toUpperCase() + type.slice(1);
+    if (type === 'trade') return 'Skill Swap';
+    return type.toUpperCase();
   };
 
   return (
-    <div className="post-card" onClick={handleCardClick}>
-      <div className="post-card-header">
-        <div className="post-type-badge">
-          <span className="post-type-icon">{getTypeIcon(post.type)}</span>
-          <span className="post-type-label">{getTypeLabel(post.type)}</span>
+    <article className="post-nodal-card" onClick={handleCardClick}>
+      <header className="card-nodal-header">
+        <div className="type-indicator-nodal">
+          <span className="type-label-nodal">{getTypeLabel(post.type)}</span>
+          <span className="type-id-nodal">PRT_{post._id?.substring(0, 4)}</span>
         </div>
         {isOwner && (
-          <button className="post-delete-btn" onClick={handleDelete} title="Delete post">
-            🗑️
+          <button className="btn-delete-nodal" onClick={handleDelete} title="Delete">
+            <Trash2 size={14} />
           </button>
         )}
-      </div>
+      </header>
 
-      {/* Creator Info */}
-      <div className="post-creator">
-        <div className="creator-avatar">
-          {post.user?.avatar ? (
-            <img src={post.user.avatar} alt={post.user.name} />
-          ) : (
-            <div className="avatar-placeholder">
-              {post.user?.name?.charAt(0)?.toUpperCase() || '?'}
+      <div className="card-nodal-body">
+        <div className="creator-profile-compact">
+          <div className="avatar-nodal-wrapper">
+            {post.user?.avatar ? (
+              <img src={post.user.avatar} alt={post.user.name} className="avatar-nodal-sm" />
+            ) : (
+              <div className="avatar-initials-nodal">
+                {post.user?.name?.charAt(0)?.toUpperCase() || '?'}
+              </div>
+            )}
+            <div className="verification-badge-nodal">
+              <BadgeCheck size={12} fill="var(--accent)" stroke="#000" />
+            </div>
+          </div>
+          <div className="creator-info-nodal">
+            <span className="creator-name-nodal">{post.user?.name || 'Anonymous'}</span>
+            <div className="creator-trust-nodal">
+              <Star size={10} fill="var(--accent)" stroke="var(--accent)" />
+              <span>{post.user?.rating?.average?.toFixed(1) || '0.0'} Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 className="card-title-editorial">{post.title}</h3>
+        <p className="card-desc-editorial">{post.description?.substring(0, 120)}...</p>
+
+        <div className="skill-matrix-compact">
+          {post.willTeach && post.willTeach.length > 0 && (
+            <div className="skill-vector-column teach">
+              <div className="vector-label-nodal">
+                <Zap size={10} />
+                <span>Offers</span>
+              </div>
+              <div className="skill-tag-cluster">
+                {post.willTeach.slice(0, 2).map((skill, index) => (
+                  <span key={index} className="skill-tag-nodal teach">
+                    {skill.customSkillName || skill.skill?.name}
+                  </span>
+                ))}
+                {post.willTeach.length > 2 && (
+                  <span className="skill-tag-count">+{post.willTeach.length - 2}</span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {post.wantToLearn && post.wantToLearn.length > 0 && (
+            <div className="skill-vector-column learn">
+              <div className="vector-label-nodal">
+                <Search size={10} />
+                <span>Seeks</span>
+              </div>
+              <div className="skill-tag-cluster">
+                {post.wantToLearn.slice(0, 2).map((skill, index) => (
+                  <span key={index} className="skill-tag-nodal learn">
+                    {skill.customSkillName || skill.skill?.name}
+                  </span>
+                ))}
+                {post.wantToLearn.length > 2 && (
+                  <span className="skill-tag-count">+{post.wantToLearn.length - 2}</span>
+                )}
+              </div>
             </div>
           )}
         </div>
-        <div className="creator-info">
-          <span className="creator-name">{post.user?.name || 'Anonymous'}</span>
-          {post.user?.rating?.average > 0 && (
-            <span className="creator-rating">
-              ⭐ {post.user.rating.average.toFixed(1)}
-            </span>
+
+        {post.linkedCourse && (
+          <div className="linked-curriculum-nodal">
+            <BookOpen size={14} className="accent-text" />
+            <span className="curriculum-title">{post.linkedCourse.title}</span>
+            <ChevronRight size={14} className="curriculum-arrow" />
+          </div>
+        )}
+      </div>
+
+      <footer className="card-nodal-footer">
+        <div className="telemetry-cluster-nodal">
+          <div className="telemetry-item-nodal">
+            <Eye size={12} />
+            <span>{post.stats?.views || 0}</span>
+          </div>
+          <div className="telemetry-item-nodal">
+            <Clock size={12} />
+            <span>{post.duration || '--'}m</span>
+          </div>
+          <div className="telemetry-item-nodal">
+            <Star size={12} fill={post.isInterested ? "var(--accent)" : "none"} stroke={post.isInterested ? "var(--accent)" : "currentColor"} />
+            <span>{post.stats?.interests || 0}</span>
+          </div>
+        </div>
+
+        <div className="action-cluster-nodal">
+          {!isOwner ? (
+            <button
+              className={`btn-action-nodal ${post.isInterested ? 'active' : ''}`}
+              onClick={handleInterestToggle}
+            >
+              <span>{post.isInterested ? 'Interested' : "I'm Interested"}</span>
+              <ArrowRight size={14} />
+            </button>
+          ) : (
+            <div className="owner-badge-nodal">Your Post</div>
           )}
         </div>
-      </div>
-
-      <h3 className="post-title">{post.title}</h3>
-      <p className="post-description">{post.description}</p>
-
-      {/* Will Teach Skills */}
-      {post.willTeach && post.willTeach.length > 0 && (
-        <div className="skills-section">
-          <div className="skills-header">
-            <span className="skills-icon">�</span>
-            <span className="skills-label">Will Teach</span>
-          </div>
-          <div className="skills-badges">
-            {post.willTeach.slice(0, 3).map((skill, index) => (
-              <span key={index} className="skill-badge teach-badge">
-                {skill.customSkillName || skill.skill?.name}
-                {skill.level && <span className="skill-level"> • {skill.level}</span>}
-              </span>
-            ))}
-            {post.willTeach.length > 3 && (
-              <span className="skill-badge-more">+{post.willTeach.length - 3} more</span>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Want to Learn Skills */}
-      {post.wantToLearn && post.wantToLearn.length > 0 && (
-        <div className="skills-section">
-          <div className="skills-header">
-            <span className="skills-icon">📚</span>
-            <span className="skills-label">Want to Learn</span>
-          </div>
-          <div className="skills-badges">
-            {post.wantToLearn.slice(0, 3).map((skill, index) => (
-              <span key={index} className="skill-badge learn-badge">
-                {skill.customSkillName || skill.skill?.name}
-                {skill.level && <span className="skill-level"> • {skill.level}</span>}
-              </span>
-            ))}
-            {post.wantToLearn.length > 3 && (
-              <span className="skill-badge-more">+{post.wantToLearn.length - 3} more</span>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {/* Linked Course */}
-      {post.linkedCourse && (
-        <div className="linked-course-section">
-          <div className="linked-course-badge">
-            <span className="course-icon">📚</span>
-            <span className="course-text">Includes Course: {post.linkedCourse.title}</span>
-          </div>
-          <button 
-            className="view-course-btn" 
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/courses/${post.linkedCourse._id}`);
-            }}
-          >
-            View Course →
-          </button>
-        </div>
-      )}
-
-      <div className="post-details">
-        {post.duration && (
-          <div className="post-detail">
-            <span className="detail-icon">⏱️</span>
-            <span>{post.duration} mins</span>
-          </div>
-        )}
-        {post.maxParticipants && (
-          <div className="post-detail">
-            <span className="detail-icon">�</span>
-            <span>Max {post.maxParticipants} people</span>
-          </div>
-        )}
-      </div>
-
-      {post.tags && post.tags.length > 0 && (
-        <div className="post-tags">
-          {post.tags.slice(0, 3).map((tag, index) => (
-            <span key={index} className="post-tag">
-              {tag}
-            </span>
-          ))}
-          {post.tags.length > 3 && <span className="post-tag-more">+{post.tags.length - 3}</span>}
-        </div>
-      )}
-
-      <div className="post-footer">
-        <div className="post-stats">
-          <span className="post-stat">
-            👁️ {post.stats?.views || post.views || 0}
-          </span>
-          <span className="post-stat">
-            ⭐ {post.stats?.interests || post.interestedUsers?.length || 0}
-          </span>
-        </div>
-        {!isOwner && (
-          <button
-            className={`interest-btn ${post.isInterested ? 'interested' : ''}`}
-            onClick={handleInterestToggle}
-          >
-            {post.isInterested ? '⭐ Interested' : '☆ Show Interest'}
-          </button>
-        )}
-      </div>
+      </footer>
 
       {post.status !== 'active' && (
-        <div className="post-status-overlay">
-          <span className="status-badge">{post.status}</span>
+        <div className="status-ribbon-nodal">
+          <span>{post.status.charAt(0).toUpperCase() + post.status.slice(1)}</span>
         </div>
       )}
-    </div>
+    </article>
   );
 };
 

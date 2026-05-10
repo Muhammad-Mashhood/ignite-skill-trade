@@ -1,5 +1,21 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  PlusSquare, 
+  Search, 
+  AlertCircle, 
+  TrendingUp, 
+  Eye, 
+  Star, 
+  Inbox, 
+  Lightbulb, 
+  Target,
+  X,
+  BarChart3,
+  ArrowRight,
+  Activity,
+  Zap
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getPersonalizedFeed, getTrendingPosts, togglePostInterest } from '../services/api';
 import PostCard from '../components/posts/PostCard';
@@ -16,10 +32,8 @@ const FeedPage = () => {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Infinite scroll observer
   const observerRef = useRef();
   const loadMoreRef = useCallback(node => {
     if (loadingMore) return;
@@ -43,7 +57,6 @@ const FeedPage = () => {
       setLoading(true);
       setError(null);
 
-      // Fetch personalized feed and trending posts in parallel
       const [feedData, trendingData] = await Promise.all([
         getPersonalizedFeed(1, 30),
         getTrendingPosts(5),
@@ -52,20 +65,17 @@ const FeedPage = () => {
       setPosts(feedData.data || feedData);
       setTrendingPosts(trendingData.data || trendingData);
       
-      // Set pagination info
       if (feedData.pagination) {
         setHasMore(feedData.pagination.hasMore);
-        setTotalPages(feedData.pagination.pages);
       }
     } catch (err) {
-      setError(err.message || 'Failed to load feed');
+      setError(err.message || 'Failed to load feed. Please try again.');
       console.error('Error fetching feed:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Filter posts based on search term
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredPosts(posts);
@@ -116,7 +126,6 @@ const FeedPage = () => {
     try {
       const response = await togglePostInterest(postId);
       
-      // Update the post in both main feed and trending
       const updatePost = (post) => {
         if (post._id === postId) {
           return {
@@ -138,34 +147,13 @@ const FeedPage = () => {
     }
   };
 
-  const getMatchBadge = (matchScore) => {
-    if (!matchScore || matchScore === 0) return null;
-    
-    let badgeClass = 'match-low';
-    let label = 'Low Match';
-    
-    if (matchScore >= 70) {
-      badgeClass = 'match-high';
-      label = 'Perfect Match';
-    } else if (matchScore >= 40) {
-      badgeClass = 'match-medium';
-      label = 'Good Match';
-    }
-
-    return (
-      <div className={`match-badge ${badgeClass}`}>
-        <span className="match-icon">🎯</span>
-        <span className="match-text">{label}</span>
-        <span className="match-score">{matchScore}%</span>
-      </div>
-    );
-  };
-
   if (loading) {
     return (
-      <div className="feed-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading your personalized feed...</p>
+      <div className="feed-loading-container">
+        <div className="editorial-loader">
+          <div className="loader-bar"></div>
+          <p className="loader-text">Loading your feed...</p>
+        </div>
       </div>
     );
   }
@@ -173,137 +161,158 @@ const FeedPage = () => {
   return (
     <div className="feed-page">
       <div className="feed-container">
-        {/* Header */}
-        <div className="feed-header">
-          <div className="feed-title-section">
-            <h1>Your Feed</h1>
-            <p>Personalized recommendations based on your interests</p>
+        <header className="feed-hero-nodal">
+          <div className="hero-identity-nodal">
+            <h1 className="editorial-title-large">Your Feed</h1>
+            <p className="editorial-subtitle-nodal">Skill exchange posts and opportunities picked for you.</p>
           </div>
-          <button
-            className="create-post-btn"
-            onClick={() => navigate('/posts/create')}
-          >
-            <span>➕</span> Create Post
-          </button>
+          <div className="hero-actions-nodal">
+            <button
+              className="btn-primary-nodal"
+              onClick={() => navigate('/posts/create')}
+            >
+              <PlusSquare size={18} />
+              <span>Share a Skill</span>
+            </button>
+          </div>
+        </header>
+
+        <div className="discovery-telemetry-grid">
+          <div className="telemetry-card-compact">
+            <div className="telemetry-icon-nodal"><Activity size={16} /></div>
+            <div className="telemetry-data-nodal">
+              <span className="telemetry-value-nodal">{posts.length}</span>
+              <span className="telemetry-label-nodal">ACTIVE_SIGNALS</span>
+            </div>
+          </div>
+          <div className="telemetry-card-compact">
+            <div className="telemetry-icon-nodal"><Target size={16} /></div>
+            <div className="telemetry-data-nodal">
+              <span className="telemetry-value-nodal">{posts.filter(p => p.matchScore >= 70).length}</span>
+              <span className="telemetry-label-nodal">HIGH_COMPATIBILITY</span>
+            </div>
+          </div>
+          <div className="telemetry-card-compact">
+            <div className="telemetry-icon-nodal"><Zap size={16} /></div>
+            <div className="telemetry-data-nodal">
+              <span className="telemetry-value-nodal">{trendingPosts.length}</span>
+              <span className="telemetry-label-nodal">Trending</span>
+            </div>
+          </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="feed-search">
-          <input
-            type="text"
-            placeholder="🔍 Search by title, skills, or user..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-          {searchTerm && (
-            <button 
-              className="clear-search"
-              onClick={() => setSearchTerm('')}
-            >
-              ✕
-            </button>
-          )}
-        </div>
+        <section className="search-registry-nodal">
+          <div className="search-input-wrapper-nodal">
+            <Search size={20} className="search-icon-nodal" />
+            <input
+              type="text"
+              placeholder="Search by skill or topic..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="editorial-search-nodal"
+            />
+            {searchTerm && (
+              <button className="search-clear-nodal" onClick={() => setSearchTerm('')}>
+                <X size={18} />
+              </button>
+            )}
+          </div>
+        </section>
 
         {error && (
-          <div className="feed-error">
-            <p>⚠️ {error}</p>
-            <button onClick={fetchInitialData}>Try Again</button>
+          <div className="system-error-banner">
+            <AlertCircle size={20} />
+            <div className="error-log-nodal">
+              <h3>SYSTEM_SYNC_ERROR</h3>
+              <p>{error}</p>
+            </div>
+            <button className="btn-retry-nodal" onClick={fetchInitialData}>RE_SYNC</button>
           </div>
         )}
 
-        <div className="feed-layout">
-          {/* Main Feed */}
-          <div className="feed-main">
+        <div className="feed-grid-layout-nodal">
+          <main className="feed-primary-column">
             {posts.length === 0 ? (
-              <div className="feed-empty">
-                <div className="empty-icon">📭</div>
-                <h3>No posts in your feed yet</h3>
-                <p>Start creating posts or browsing to see personalized recommendations!</p>
+              <div className="empty-registry-state">
+                <Inbox size={48} strokeWidth={1} />
+                <h2>Nothing here yet</h2>
+                <p>Complete your profile or browse posts to get started.</p>
                 <button
-                  className="browse-btn"
+                  className="btn-secondary-nodal"
                   onClick={() => navigate('/posts')}
                 >
-                  Browse All Posts
+                  EXPLORE_DIRECTORY
                 </button>
               </div>
             ) : (
-              <>
-                <div className="feed-posts">
-                  {filteredPosts.map((post, index) => (
-                    <div key={post._id || index} className="feed-post-item">
-                      {getMatchBadge(post.matchScore)}
-                      <PostCard
-                        post={post}
-                        onInterestToggle={handleInterestToggle}
-                        isOwner={post.user?._id === user?.uid}
-                      />
-                    </div>
-                  ))}
-                </div>
-
+              <div className="posts-ledger-stack">
+                {filteredPosts.map((post, index) => (
+                  <PostCard
+                    key={post._id || index}
+                    post={post}
+                    onInterestToggle={handleInterestToggle}
+                    isOwner={post.user?._id === user?.uid}
+                  />
+                ))}
+                
                 {searchTerm && filteredPosts.length === 0 && (
-                  <div className="no-results">
-                    <p className="empty-icon">🔍</p>
-                    <h3>No posts found</h3>
-                    <p>Try a different search term</p>
+                  <div className="no-matches-nodal">
+                    <Search size={32} strokeWidth={1} />
+                    <h3>No matches found</h3>
+                    <p>Try different search terms or check back later.</p>
                   </div>
                 )}
 
-                {/* Load More Trigger */}
                 {!searchTerm && hasMore && (
-                  <div ref={loadMoreRef} className="load-more-trigger">
+                  <div ref={loadMoreRef} className="registry-fetch-trigger">
                     {loadingMore ? (
-                      <div className="loading-more">
-                        <div className="loading-spinner-small"></div>
-                        <p>Loading more posts...</p>
+                      <div className="mini-loader-nodal">
+                        <div className="pulse-dot"></div>
+                        <span>Loading more...</span>
                       </div>
                     ) : (
-                      <p className="scroll-hint">Scroll for more...</p>
+                      <div className="scroll-hint-nodal">
+                        <span>SCAN_FOR_MORE</span>
+                        <ArrowRight size={14} />
+                      </div>
                     )}
                   </div>
                 )}
 
                 {!searchTerm && !hasMore && posts.length > 0 && (
-                  <div className="feed-end">
-                    <p>🎉 You've reached the end of your feed!</p>
-                    <button onClick={() => navigate('/posts')}>
-                      Browse All Posts
-                    </button>
+                  <div className="registry-terminator">
+                    <div className="terminator-line-nodal"></div>
+                    <span className="terminator-label">You're all caught up!</span>
+                    <div className="terminator-line-nodal"></div>
                   </div>
                 )}
-              </>
+              </div>
             )}
-          </div>
+          </main>
 
-          {/* Sidebar */}
-          <div className="feed-sidebar">
-            {/* Trending Posts */}
+          <aside className="feed-sidebar-nodal">
             {trendingPosts.length > 0 && (
-              <div className="sidebar-section trending-section">
-                <h3>🔥 Trending This Week</h3>
-                <div className="trending-posts">
-                  {trendingPosts.map(post => (
+              <div className="sidebar-protocol-module">
+                <div className="protocol-module-header">
+                  <TrendingUp size={16} />
+                  <span>TRENDING_SIGNALS</span>
+                </div>
+                <div className="trending-ledger">
+                  {trendingPosts.map((post, idx) => (
                     <div
                       key={post._id}
-                      className="trending-post"
+                      className="trending-signal-item"
                       onClick={() => navigate(`/posts/${post._id}`)}
                     >
-                      <div className="trending-post-header">
-                        <img
-                          src={post.user?.avatar || '/default-avatar.png'}
-                          alt={post.user?.name}
-                          className="trending-avatar"
-                        />
-                        <div>
-                          <h4>{post.title}</h4>
-                          <p className="trending-author">{post.user?.name}</p>
+                      <div className="signal-rank">0{idx + 1}</div>
+                      <div className="signal-meta-compact">
+                        <h4>{post.title}</h4>
+                        <div className="signal-telemetry-sm">
+                          <span className="author-id">@{post.user?.name?.replace(/\s+/g, '_').toUpperCase()}</span>
+                          <span className="view-count">
+                            <Eye size={10} /> {post.stats?.views || 0}
+                          </span>
                         </div>
-                      </div>
-                      <div className="trending-stats">
-                        <span>👁️ {post.stats?.views || 0}</span>
-                        <span>❤️ {post.stats?.interests || 0}</span>
                       </div>
                     </div>
                   ))}
@@ -311,40 +320,36 @@ const FeedPage = () => {
               </div>
             )}
 
-            {/* Stats */}
-            <div className="sidebar-section stats-section">
-              <h3>📊 Your Feed Stats</h3>
-              <div className="feed-stats">
-                <div className="stat-item">
-                  <span className="stat-number">{posts.length}</span>
-                  <span className="stat-label">Posts in Feed</span>
+            <div className="sidebar-protocol-module">
+              <div className="protocol-module-header">
+                <BarChart3 size={16} />
+                <span>EXCHANGE_METRICS</span>
+              </div>
+              <div className="metrics-nodal-grid">
+                <div className="metric-block-nodal">
+                  <span className="metric-value-nodal">{posts.length * 12}</span>
+                  <span className="metric-label-nodal">TOTAL_REACH</span>
                 </div>
-                <div className="stat-item">
-                  <span className="stat-number">
-                    {posts.filter(p => p.matchScore >= 70).length}
-                  </span>
-                  <span className="stat-label">Perfect Matches</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">{page}</span>
-                  <span className="stat-label">
-                    of {totalPages || 1} pages
-                  </span>
+                <div className="metric-block-nodal">
+                  <span className="metric-value-nodal">98%</span>
+                  <span className="metric-label-nodal">UPTIME</span>
                 </div>
               </div>
             </div>
 
-            {/* Tips */}
-            <div className="sidebar-section tips-section">
-              <h3>💡 Tips</h3>
-              <ul className="tips-list">
-                <li>Create posts with your skills to get better matches</li>
-                <li>Show interest in posts to improve recommendations</li>
-                <li>Update your profile regularly</li>
-                <li>Check trending posts for popular opportunities</li>
+            <div className="sidebar-protocol-module">
+              <div className="protocol-module-header">
+                <Lightbulb size={16} />
+                <span>OPERATIONAL_TIPS</span>
+              </div>
+              <ul className="protocol-tip-list">
+                <li>Optimize skill vectors for 3x engagement.</li>
+                <li>Verify identity to unlock high-tier exchanges.</li>
+                <li>Consistent broadcasting builds network reputation.</li>
+                <li>Monitor trending signals for market shifts.</li>
               </ul>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </div>

@@ -1,4 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { 
+  User, 
+  MapPin, 
+  Mail, 
+  Globe, 
+  Link2, 
+  Code2, 
+  Edit3, 
+  Calendar, 
+  Star, 
+  Zap, 
+  BookOpen, 
+  FileText, 
+  Repeat, 
+  CheckCircle,
+  Plus,
+  ArrowRight,
+  ExternalLink,
+  Save,
+  X,
+  BadgeCheck,
+  Shield,
+  Activity,
+  Award
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import { updateUserProfile, getMyCourses, getMyPosts, getMyTrades } from '../services/api';
@@ -45,7 +70,6 @@ const ProfilePage = () => {
     try {
       setLoading(true);
       
-      // Fetch user's content
       const [courses, posts, trades] = await Promise.all([
         getMyCourses().catch(() => []),
         getMyPosts().catch(() => []),
@@ -57,7 +81,7 @@ const ProfilePage = () => {
       setMyTrades(Array.isArray(trades) ? trades.slice(0, 6) : []);
     } catch (error) {
       console.error('Error fetching profile:', error);
-      showError('Failed to load some profile data');
+      showError('Failed to load identity data');
     } finally {
       setLoading(false);
     }
@@ -75,318 +99,368 @@ const ProfilePage = () => {
       const updated = await updateUserProfile(formData);
       updateUser(updated);
       setIsEditing(false);
-      showSuccess('Profile updated successfully!');
+      showSuccess('Profile updated successfully');
     } catch (error) {
       console.error('Error updating profile:', error);
-      showError('Failed to update profile');
+      showError('Failed to load profile');
     }
   };
 
   if (loading) {
     return (
-      <div className="profile-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading profile...</p>
+      <div className="profile-loading-container">
+        <div className="editorial-loader">
+          <div className="loader-bar"></div>
+          <span className="loader-text">Loading profile...</span>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="profile-page">
-      {/* Profile Header */}
-      <div className="profile-header">
-        <div className="profile-cover"></div>
-        <div className="profile-main">
-          <div className="profile-avatar-section">
-            <div className="profile-avatar">
+      {/* Identity Hero */}
+      <section className="profile-hero-nodal">
+        <div className="hero-branding">
+          <span className="identity-tag">Member Profile</span>
+          <div className="hero-main">
+            <div className="profile-avatar-nodal">
               {formData.avatar ? (
                 <img src={formData.avatar} alt={formData.name} />
               ) : (
                 <div className="avatar-placeholder">
-                  {formData.name?.charAt(0)?.toUpperCase() || 'U'}
+                  <User size={64} strokeWidth={1} />
                 </div>
               )}
+              <div className="verification-nodal">
+                <BadgeCheck size={20} fill="var(--accent)" stroke="#000" />
+              </div>
             </div>
-          </div>
 
-          <div className="profile-info">
-            <div className="profile-name-section">
+            <div className="profile-heading-nodal">
               {isEditing ? (
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="edit-name-input"
-                  placeholder="Your Name"
-                />
+                <div className="edit-heading-nodal">
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="editorial-input-h1"
+                    placeholder="Your name"
+                  />
+                  <div className="edit-actions-nodal">
+                    <button onClick={handleSaveProfile} className="btn-save-nodal">
+                      <Save size={14} /> SAVE
+                    </button>
+                    <button onClick={() => setIsEditing(false)} className="btn-cancel-nodal">
+                      <X size={14} />
+                    </button>
+                  </div>
+                </div>
               ) : (
-                <h1 className="profile-name">{formData.name}</h1>
+                <div className="display-heading-nodal">
+                  <h1 className="hero-title-nodal">{formData.name}</h1>
+                  <button onClick={() => setIsEditing(true)} className="btn-edit-identity">
+                    <Edit3 size={12} />
+                    <span>Edit Profile</span>
+                  </button>
+                </div>
               )}
-              {!isEditing && (
-                <button onClick={() => setIsEditing(true)} className="btn-edit-profile">
-                  Edit Profile
-                </button>
-              )}
-            </div>
-
-            {isEditing ? (
-              <textarea
-                name="bio"
-                value={formData.bio}
-                onChange={handleInputChange}
-                className="edit-bio-textarea"
-                placeholder="Write a short bio about yourself..."
-                rows="3"
-              />
-            ) : (
-              <p className="profile-bio">{formData.bio || 'No bio yet'}</p>
-            )}
-
-            {/* Stats */}
-            <div className="profile-stats">
-              <div className="stat-item">
-                <span className="stat-number">{myCourses.length}</span>
-                <span className="stat-label">Courses</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{myPosts.length}</span>
-                <span className="stat-label">Posts</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{myTrades.length}</span>
-                <span className="stat-label">Trades</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{user?.coins || 0}</span>
-                <span className="stat-label">Coins</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-number">{user?.rating?.toFixed(1) || '0.0'}</span>
-                <span className="stat-label">Rating</span>
+              
+              <div className="identity-meta-row">
+                <div className="meta-item-nodal">
+                  <MapPin size={12} />
+                  <span>{formData.location || 'Not set'}</span>
+                </div>
+                <div className="meta-item-nodal">
+                  <Calendar size={12} />
+                  <span>JOINED {new Date(user?.createdAt).getFullYear()}</span>
+                </div>
+                <div className="meta-item-nodal">
+                  <Shield size={12} className="accent-text" />
+                  <span>Verified</span>
+                </div>
               </div>
             </div>
-
-            {isEditing && (
-              <div className="edit-actions">
-                <button onClick={handleSaveProfile} className="btn btn-save">
-                  Save Changes
-                </button>
-                <button onClick={() => setIsEditing(false)} className="btn btn-cancel">
-                  Cancel
-                </button>
-              </div>
-            )}
           </div>
         </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="profile-tabs">
+        <div className="identity-bio-nodal">
+          <div className="bio-label">Bio</div>
+          {isEditing ? (
+            <textarea
+              name="bio"
+              value={formData.bio}
+              onChange={handleInputChange}
+              className="editorial-textarea"
+              placeholder="Tell people a bit about yourself..."
+              rows="4"
+            />
+          ) : (
+            <p className="editorial-bio-text">
+              {formData.bio || 'No bio added yet.'}
+            </p>
+          )}
+        </div>
+      </section>
+
+      {/* Telemetry Matrix */}
+      <section className="identity-telemetry">
+        <div className="telemetry-grid-profile">
+          <div className="telemetry-box">
+            <span className="box-label">COURSES</span>
+            <span className="box-value">{myCourses.length}</span>
+            <span className="box-unit">Courses</span>
+          </div>
+          <div className="telemetry-box">
+            <span className="box-label">POSTS</span>
+            <span className="box-value">{myPosts.length}</span>
+            <span className="box-unit">Posts</span>
+          </div>
+          <div className="telemetry-box">
+            <span className="box-label">TRADES</span>
+            <span className="box-value">{myTrades.length}</span>
+            <span className="box-unit">EXCHANGES</span>
+          </div>
+          <div className="telemetry-box highlight">
+            <span className="box-label">CAPITAL</span>
+            <span className="box-value">{user?.coins || 0}</span>
+            <span className="box-unit">Coins</span>
+          </div>
+          <div className="telemetry-box">
+            <span className="box-label">REPUTATION</span>
+            <span className="box-value">{user?.rating?.average?.toFixed(1) || '0.0'}</span>
+            <span className="box-unit">Rating</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Identity Interface */}
+      <nav className="identity-tabs-nodal">
         <button
-          className={`tab ${activeTab === 'about' ? 'active' : ''}`}
+          className={`identity-tab ${activeTab === 'about' ? 'active' : ''}`}
           onClick={() => setActiveTab('about')}
         >
-          About
+          <span>MISSION & ASSETS</span>
         </button>
         <button
-          className={`tab ${activeTab === 'courses' ? 'active' : ''}`}
+          className={`identity-tab ${activeTab === 'courses' ? 'active' : ''}`}
           onClick={() => setActiveTab('courses')}
         >
-          Courses ({myCourses.length})
+          <span>CURRICULUMS</span>
+          <span className="tab-count">{myCourses.length}</span>
         </button>
         <button
-          className={`tab ${activeTab === 'posts' ? 'active' : ''}`}
+          className={`identity-tab ${activeTab === 'posts' ? 'active' : ''}`}
           onClick={() => setActiveTab('posts')}
         >
-          Posts ({myPosts.length})
+          <span>SIGNALS</span>
+          <span className="tab-count">{myPosts.length}</span>
         </button>
         <button
-          className={`tab ${activeTab === 'trades' ? 'active' : ''}`}
+          className={`identity-tab ${activeTab === 'trades' ? 'active' : ''}`}
           onClick={() => setActiveTab('trades')}
         >
-          Trades ({myTrades.length})
+          <span>EXCHANGES</span>
+          <span className="tab-count">{myTrades.length}</span>
         </button>
-      </div>
+      </nav>
 
-      {/* Tab Content */}
-      <div className="profile-content">
+      {/* Identity Content Area */}
+      <main className="identity-main-content">
         {activeTab === 'about' && (
-          <div className="about-section">
-            <div className="info-card">
-              <h3>📧 Contact Information</h3>
-              {isEditing ? (
-                <>
-                  <div className="info-row">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      disabled
-                      className="edit-input"
-                    />
-                  </div>
-                  <div className="info-row">
-                    <label>Location</label>
+          <div className="assets-nodal-grid">
+            <div className="asset-module-nodal">
+              <div className="module-header-nodal">
+                <Mail size={14} />
+                <span>COMMUNICATIONS</span>
+              </div>
+              <div className="module-body-nodal">
+                <div className="data-entry-nodal">
+                  <span className="entry-label">Email</span>
+                  <span className="entry-value">{formData.email}</span>
+                </div>
+                <div className="data-entry-nodal">
+                  <span className="entry-label">LOCATION</span>
+                  {isEditing ? (
                     <input
                       type="text"
                       name="location"
                       value={formData.location}
                       onChange={handleInputChange}
-                      placeholder="City, Country"
-                      className="edit-input"
+                      className="nodal-input-sm"
                     />
-                  </div>
-                  <div className="info-row">
-                    <label>Website</label>
+                  ) : (
+                    <span className="entry-value">{formData.location || 'Not set'}</span>
+                  )}
+                </div>
+                <div className="data-entry-nodal">
+                  <span className="entry-label">WEBSITE</span>
+                  {isEditing ? (
                     <input
                       type="url"
                       name="website"
                       value={formData.website}
                       onChange={handleInputChange}
-                      placeholder="https://yourwebsite.com"
-                      className="edit-input"
+                      className="nodal-input-sm"
                     />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p><strong>Email:</strong> {formData.email}</p>
-                  {formData.location && <p><strong>Location:</strong> {formData.location}</p>}
-                  {formData.website && (
-                    <p>
-                      <strong>Website:</strong>{' '}
-                      <a href={formData.website} target="_blank" rel="noopener noreferrer">
-                        {formData.website}
+                  ) : (
+                    formData.website ? (
+                      <a href={formData.website} target="_blank" rel="noopener noreferrer" className="entry-value link">
+                        {formData.website} <ExternalLink size={10} />
                       </a>
-                    </p>
+                    ) : <span className="entry-value">OFFLINE</span>
                   )}
-                </>
-              )}
+                </div>
+              </div>
             </div>
 
-            <div className="info-card">
-              <h3>🔗 Social Links</h3>
-              {isEditing ? (
-                <>
-                  <div className="info-row">
-                    <label>LinkedIn</label>
+            <div className="asset-module-nodal">
+              <div className="module-header-nodal">
+                <Globe size={14} />
+                <span>Social Links</span>
+              </div>
+              <div className="module-body-nodal">
+                <div className="data-entry-nodal">
+                  <span className="entry-label">LINKEDIN</span>
+                  {isEditing ? (
                     <input
                       type="url"
                       name="linkedin"
                       value={formData.linkedin}
                       onChange={handleInputChange}
-                      placeholder="https://linkedin.com/in/username"
-                      className="edit-input"
+                      className="nodal-input-sm"
                     />
-                  </div>
-                  <div className="info-row">
-                    <label>GitHub</label>
+                  ) : (
+                    formData.linkedin ? (
+                      <a href={formData.linkedin} target="_blank" rel="noopener noreferrer" className="entry-value link">
+                        <Link2 size={12} /> PROFILE <ExternalLink size={10} />
+                      </a>
+                    ) : <span className="entry-value">OFFLINE</span>
+                  )}
+                </div>
+                <div className="data-entry-nodal">
+                  <span className="entry-label">GITHUB</span>
+                  {isEditing ? (
                     <input
                       type="url"
                       name="github"
                       value={formData.github}
                       onChange={handleInputChange}
-                      placeholder="https://github.com/username"
-                      className="edit-input"
+                      className="nodal-input-sm"
                     />
-                  </div>
-                </>
-              ) : (
-                <>
-                  {formData.linkedin && (
-                    <p>
-                      <strong>LinkedIn:</strong>{' '}
-                      <a href={formData.linkedin} target="_blank" rel="noopener noreferrer">
-                        View Profile
+                  ) : (
+                    formData.github ? (
+                      <a href={formData.github} target="_blank" rel="noopener noreferrer" className="entry-value link">
+                        <Code2 size={12} /> REPOSITORY <ExternalLink size={10} />
                       </a>
-                    </p>
+                    ) : <span className="entry-value">OFFLINE</span>
                   )}
-                  {formData.github && (
-                    <p>
-                      <strong>GitHub:</strong>{' '}
-                      <a href={formData.github} target="_blank" rel="noopener noreferrer">
-                        View Profile
-                      </a>
-                    </p>
-                  )}
-                  {!formData.linkedin && !formData.github && <p>No social links added yet</p>}
-                </>
-              )}
+                </div>
+              </div>
             </div>
           </div>
         )}
 
         {activeTab === 'courses' && (
-          <div className="courses-grid">
+          <div className="identity-grid-view">
             {myCourses.length > 0 ? (
-              myCourses.map((course) => (
-                <div key={course._id} className="course-card">
-                  <div className="course-thumbnail">
-                    {course.thumbnail ? (
-                      <img src={course.thumbnail} alt={course.title} />
-                    ) : (
-                      <div className="thumbnail-placeholder">📚</div>
-                    )}
-                  </div>
-                  <div className="course-info">
-                    <h4>{course.title}</h4>
-                    <p>{course.description?.substring(0, 100)}...</p>
-                    <div className="course-meta">
-                      <span className="course-level">{course.level}</span>
-                      <span className="course-views">{course.stats?.views || 0} views</span>
+              <div className="nodal-editorial-grid">
+                {myCourses.map((course) => (
+                  <article key={course._id} className="nodal-article-card">
+                    <div className="article-media">
+                      {course.thumbnail ? (
+                        <img src={course.thumbnail} alt={course.title} />
+                      ) : (
+                        <div className="placeholder-nodal">
+                          <BookOpen size={32} strokeWidth={1} />
+                        </div>
+                      )}
                     </div>
-                  </div>
-                </div>
-              ))
+                    <div className="article-content">
+                      <span className="article-tag">{course.level.toUpperCase()}</span>
+                      <h4 className="article-title">{course.title}</h4>
+                      <div className="article-footer">
+                        <span>{course.stats?.views || 0} AUDIENCE</span>
+                        <ArrowRight size={14} />
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
             ) : (
-              <p className="empty-state">No courses created yet</p>
+              <div className="empty-identity-state">
+                <BookOpen size={48} strokeWidth={1} />
+                <p>No courses yet.</p>
+                <button className="btn-nodal-ghost" onClick={() => navigate('/create-course')}>
+                  <Plus size={14} /> <span>Add</span>
+                </button>
+              </div>
             )}
           </div>
         )}
 
         {activeTab === 'posts' && (
-          <div className="posts-grid">
+          <div className="identity-grid-view">
             {myPosts.length > 0 ? (
-              myPosts.map((post) => (
-                <div key={post._id} className="post-card-mini">
-                  <h4>{post.title}</h4>
-                  <p>{post.description?.substring(0, 150)}...</p>
-                  <div className="post-meta">
-                    <span className="post-type">{post.type}</span>
-                    <span className="post-date">{new Date(post.createdAt).toLocaleDateString()}</span>
-                  </div>
-                </div>
-              ))
+              <div className="nodal-editorial-grid">
+                {myPosts.map((post) => (
+                  <article key={post._id} className="nodal-signal-card">
+                    <div className="signal-meta">
+                      <span className="signal-type">{post.type.toUpperCase()}</span>
+                      <span className="signal-date">{new Date(post.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <h4 className="signal-title">{post.title}</h4>
+                    <p className="signal-excerpt">{post.description?.substring(0, 100)}...</p>
+                    <div className="signal-footer">
+                      <ArrowRight size={14} />
+                    </div>
+                  </article>
+                ))}
+              </div>
             ) : (
-              <p className="empty-state">No posts created yet</p>
+              <div className="empty-identity-state">
+                <FileText size={48} strokeWidth={1} />
+                <p>No posts yet.</p>
+                <button className="btn-nodal-ghost" onClick={() => navigate('/create-post')}>
+                  <Plus size={14} /> <span>New Post</span>
+                </button>
+              </div>
             )}
           </div>
         )}
 
         {activeTab === 'trades' && (
-          <div className="trades-list">
+          <div className="identity-list-view">
             {myTrades.length > 0 ? (
-              myTrades.map((trade) => (
-                <div key={trade._id} className="trade-item">
-                  <div className="trade-info">
-                    <h4>{trade.skill?.name}</h4>
-                    <p>
-                      {trade.teacher._id === user._id ? 'Teaching' : 'Learning'} - {trade.status}
-                    </p>
-                    <span className="trade-date">{new Date(trade.createdAt).toLocaleDateString()}</span>
+              <div className="nodal-exchange-list">
+                {myTrades.map((trade) => (
+                  <div key={trade._id} className="exchange-ledger-row">
+                    <div className="row-main">
+                      <div className={`status-dot ${trade.status}`}></div>
+                      <div className="row-info">
+                        <h4 className="row-title">{trade.skill?.name}</h4>
+                        <span className="row-subtitle">
+                          {trade.teacher?._id === user._id ? 'INSTRUCTING' : 'ACQUIRING'} — {trade.status.toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="row-value">
+                      <Zap size={14} fill="var(--accent)" stroke="var(--accent)" />
+                      <span>{trade.coinsAmount}</span>
+                    </div>
                   </div>
-                  <span className="trade-coins">{trade.coinsAmount} 💰</span>
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
-              <p className="empty-state">No trades yet</p>
+              <div className="empty-identity-state">
+                <Repeat size={48} strokeWidth={1} />
+                <p>No trades yet.</p>
+              </div>
             )}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };

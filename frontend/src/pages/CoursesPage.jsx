@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Search, 
+  Filter, 
+  Lock, 
+  Star, 
+  Users, 
+  Eye, 
+  Zap, 
+  X, 
+  ChevronRight,
+  BookOpen,
+  LayoutGrid,
+  List,
+  SlidersHorizontal,
+  ArrowRight
+} from 'lucide-react';
 import { useToast } from '../contexts/ToastContext';
 import { getCourses, getSkills } from '../services/api';
 import './CoursesPage.css';
 
 const CoursesPage = () => {
   const navigate = useNavigate();
-  const { showToast } = useToast();
+  const { showError } = useToast();
   
   const [courses, setCourses] = useState([]);
   const [skills, setSkills] = useState([]);
@@ -18,16 +34,8 @@ const CoursesPage = () => {
   const [sortBy, setSortBy] = useState('newest');
   
   const categories = [
-    'Programming',
-    'Design',
-    'Business',
-    'Marketing',
-    'Music',
-    'Language',
-    'Fitness',
-    'Cooking',
-    'Photography',
-    'Other'
+    'Programming', 'Design', 'Business', 'Marketing', 'Music', 
+    'Language', 'Fitness', 'Cooking', 'Photography', 'Other'
   ];
   
   const levels = ['Beginner', 'Intermediate', 'Advanced', 'All Levels'];
@@ -40,7 +48,7 @@ const CoursesPage = () => {
   const fetchSkills = async () => {
     try {
       const data = await getSkills();
-      setSkills(data);
+      setSkills(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching skills:', error);
     }
@@ -56,10 +64,10 @@ const CoursesPage = () => {
         sort: sortBy,
       };
       const data = await getCourses(filters);
-      setCourses(data);
+      setCourses(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Error fetching courses:', error);
-      showToast('Failed to load courses', 'error');
+      showError('Failed to load courses');
     } finally {
       setLoading(false);
     }
@@ -91,10 +99,10 @@ const CoursesPage = () => {
   
   if (loading) {
     return (
-      <div className="courses-page">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading courses...</p>
+      <div className="courses-loading-container">
+        <div className="editorial-loader">
+          <div className="loader-bar"></div>
+          <span className="loader-text">Loading courses...</span>
         </div>
       </div>
     );
@@ -102,195 +110,197 @@ const CoursesPage = () => {
   
   return (
     <div className="courses-page">
-      <div className="courses-container">
-        {/* Header */}
-        <div className="page-header">
-          <div>
-            <h1>Browse Courses</h1>
-            <p>Discover courses from skilled instructors in the community</p>
+      <header className="courses-hero">
+        <div className="hero-branding">
+          <span className="registry-tag">Course Catalog</span>
+          <h1 className="hero-title-nodal">Curriculum Discovery</h1>
+          <p className="hero-subtitle-editorial">Access validated knowledge modules from the global contributor network.</p>
+        </div>
+        <div className="discovery-stats">
+          <div className="stat-nodal">
+            <span className="stat-value">{courses.length}</span>
+            <span className="stat-label">MODULES</span>
+          </div>
+          <div className="stat-nodal">
+            <span className="stat-value">{categories.length}</span>
+            <span className="stat-label">Available</span>
           </div>
         </div>
-        
-        <div className="courses-layout">
-          {/* Sidebar Filters */}
-          <aside className="filters-sidebar">
-            <div className="filters-header">
-              <h3>Filters</h3>
-              {(searchTerm || selectedCategory || selectedLevel || selectedSkills.length > 0) && (
-                <button className="btn-clear-filters" onClick={clearFilters}>
-                  Clear All
+      </header>
+
+      <div className="discovery-layout">
+        <aside className="filters-nodal-sidebar">
+          <div className="filters-header-nodal">
+            <SlidersHorizontal size={14} />
+            <h3>FILTERS</h3>
+            {(searchTerm || selectedCategory || selectedLevel || selectedSkills.length > 0) && (
+              <button className="btn-clear-nodal" onClick={clearFilters}>
+                <X size={10} /> RESET
+              </button>
+            )}
+          </div>
+          
+          <div className="filter-group-nodal">
+            <h4 className="filter-label">CATEGORY</h4>
+            <div className="filter-options-nodal">
+              {categories.map(category => (
+                <button 
+                  key={category} 
+                  className={`filter-option-btn ${selectedCategory === category ? 'active' : ''}`}
+                  onClick={() => setSelectedCategory(selectedCategory === category ? '' : category)}
+                >
+                  {category}
                 </button>
-              )}
+              ))}
             </div>
-            
-            {/* Category Filter */}
-            <div className="filter-group">
-              <h4>Category</h4>
-              <div className="filter-options">
-                {categories.map(category => (
-                  <label key={category} className="filter-checkbox">
-                    <input
-                      type="radio"
-                      name="category"
-                      checked={selectedCategory === category}
-                      onChange={() => setSelectedCategory(
-                        selectedCategory === category ? '' : category
-                      )}
-                    />
-                    <span>{category}</span>
-                  </label>
-                ))}
-              </div>
+          </div>
+          
+          <div className="filter-group-nodal">
+            <h4 className="filter-label">LEVEL</h4>
+            <div className="filter-options-nodal">
+              {levels.map(level => (
+                <button 
+                  key={level} 
+                  className={`filter-option-btn ${selectedLevel === level ? 'active' : ''}`}
+                  onClick={() => setSelectedLevel(selectedLevel === level ? '' : level)}
+                >
+                  {level}
+                </button>
+              ))}
             </div>
-            
-            {/* Level Filter */}
-            <div className="filter-group">
-              <h4>Level</h4>
-              <div className="filter-options">
-                {levels.map(level => (
-                  <label key={level} className="filter-checkbox">
-                    <input
-                      type="radio"
-                      name="level"
-                      checked={selectedLevel === level}
-                      onChange={() => setSelectedLevel(
-                        selectedLevel === level ? '' : level
-                      )}
-                    />
-                    <span>{level}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            
-            {/* Skills Filter */}
-            <div className="filter-group">
-              <h4>Skills</h4>
-              <div className="filter-options skills-filter">
-                {skills.slice(0, 10).map(skill => (
-                  <label key={skill._id} className="filter-checkbox">
+          </div>
+          
+          {skills.length > 0 && (
+            <div className="filter-group-nodal">
+              <h4 className="filter-label">SKILLS</h4>
+              <div className="filter-options-nodal scrollable">
+                {skills.slice(0, 15).map(skill => (
+                  <label key={skill._id} className="filter-checkbox-nodal">
                     <input
                       type="checkbox"
                       checked={selectedSkills.includes(skill._id)}
                       onChange={() => handleSkillToggle(skill._id)}
                     />
-                    <span>{skill.name}</span>
+                    <span className="checkbox-box"></span>
+                    <span className="checkbox-label">{skill.name}</span>
                   </label>
                 ))}
               </div>
             </div>
-          </aside>
-          
-          {/* Main Content */}
-          <div className="courses-main">
-            {/* Search and Sort */}
-            <div className="search-sort-bar">
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder="🔍 Search courses..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                {searchTerm && (
-                  <button
-                    className="clear-search"
-                    onClick={() => setSearchTerm('')}
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-              
+          )}
+        </aside>
+        
+        <main className="discovery-main">
+          <div className="control-bar-nodal">
+            <div className="search-cluster-nodal">
+              <Search size={16} className="search-icon-nodal" />
+              <input
+                type="text"
+                placeholder="Search courses..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="registry-search-input"
+              />
+              {searchTerm && (
+                <button className="btn-search-clear" onClick={() => setSearchTerm('')}>
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            
+            <div className="sort-cluster-nodal">
               <select
-                className="sort-select"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
+                className="registry-sort-select"
               >
-                <option value="newest">Newest First</option>
-                <option value="popular">Most Popular</option>
-                <option value="rating">Highest Rated</option>
+                <option value="newest">NEWEST EMISSIONS</option>
+                <option value="popular">MAX AUDIENCE</option>
+                <option value="rating">PEER REPUTATION</option>
               </select>
             </div>
-            
-            {/* Results Count */}
-            <div className="results-count">
-              {filteredCourses.length} course{filteredCourses.length !== 1 ? 's' : ''} found
-            </div>
-            
-            {/* Courses Grid */}
-            {filteredCourses.length > 0 ? (
-              <div className="courses-grid">
-                {filteredCourses.map(course => (
-                  <div
-                    key={course._id}
-                    className="course-card"
-                    onClick={() => navigate(`/courses/${course._id}`)}
-                  >
-                    <div
-                      className="course-thumbnail"
-                      style={{
-                        backgroundImage: course.thumbnail?.url
-                          ? `url(${course.thumbnail.url})`
-                          : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-                      }}
-                    >
-                      {course.hasAccess === false && (
-                        <span className="lock-badge">🔒</span>
-                      )}
+          </div>
+          
+          <div className="results-metrics-nodal">
+            <LayoutGrid size={12} />
+            <span>{filteredCourses.length} MODULES DETECTED</span>
+          </div>
+          
+          {filteredCourses.length > 0 ? (
+            <div className="registry-grid-nodal">
+              {filteredCourses.map(course => (
+                <article 
+                  key={course._id} 
+                  className="course-nodal-card"
+                  onClick={() => navigate(`/courses/${course._id}`)}
+                >
+                  <div className="card-media-nodal">
+                    {course.thumbnail?.url ? (
+                      <img src={course.thumbnail.url} alt={course.title} />
+                    ) : (
+                      <div className="media-placeholder-nodal">
+                        <BookOpen size={48} strokeWidth={1} />
+                      </div>
+                    )}
+                    {course.hasAccess === false && (
+                      <div className="lock-overlay-nodal">
+                        <Lock size={20} />
+                      </div>
+                    )}
+                    <div className="category-tag-nodal">{course.category}</div>
+                  </div>
+                  
+                  <div className="card-content-nodal">
+                    <div className="instructor-nodal">
+                      <img
+                        src={course.instructor?.avatar || '/default-avatar.png'}
+                        alt={course.instructor?.name}
+                      />
+                      <span>{course.instructor?.name || 'ANONYMOUS'}</span>
                     </div>
                     
-                    <div className="course-body">
-                      <div className="instructor-badge">
-                        <img
-                          src={course.instructor?.avatar || '/default-avatar.png'}
-                          alt={course.instructor?.name}
-                          className="instructor-avatar-small"
-                        />
-                        <span>{course.instructor?.name || 'Unknown'}</span>
+                    <h3 className="course-title-editorial">{course.title}</h3>
+                    
+                    <div className="course-telemetry-row">
+                      <div className="telemetry-item">
+                        <Star size={12} className="accent-text" />
+                        <span>{course.stats?.averageRating?.toFixed(1) || '0.0'}</span>
                       </div>
-                      
-                      <h3 className="course-title">{course.title}</h3>
-                      
-                      <div className="course-meta">
-                        <span className="category">{course.category}</span>
-                        <span className="level">{course.level}</span>
+                      <div className="telemetry-item">
+                        <Users size={12} />
+                        <span>{course.stats?.enrollmentCount || 0}</span>
                       </div>
-                      
-                      <div className="course-stats-row">
-                        <span className="stat">
-                          ⭐ {course.stats?.averageRating?.toFixed(1) || '0.0'}
-                        </span>
-                        <span className="stat">
-                          👥 {course.stats?.enrollmentCount || 0}
-                        </span>
-                        <span className="stat">
-                          👁️ {course.stats?.views || 0}
-                        </span>
+                      <div className="telemetry-item">
+                        <Eye size={12} />
+                        <span>{course.stats?.views || 0}</span>
                       </div>
-                      
-                      <div className="course-footer">
-                        <span className="price">💰 {course.coinsRequired} Coins</span>
-                        {course.hasAccess === false && (
-                          <span className="locked-label">Locked</span>
-                        )}
+                    </div>
+                    
+                    <div className="card-footer-nodal">
+                      <div className="price-nodal">
+                        <Zap size={14} fill="var(--accent)" stroke="var(--accent)" />
+                        <span>{course.coinsRequired} COINS</span>
+                      </div>
+                      <div className="view-action-nodal">
+                        <span>ACCESS</span>
+                        <ArrowRight size={14} />
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="empty-state">
-                <div className="empty-icon">🔍</div>
-                <h2>No courses found</h2>
-                <p>Try adjusting your search or filters</p>
-                <button className="btn-clear-filters" onClick={clearFilters}>
-                  Clear Filters
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-registry-state">
+              <Search size={64} strokeWidth={0.5} />
+              <h2>NO MODULES DETECTED</h2>
+              <p>The specified parameters yielded zero results in the current registry.</p>
+              <button className="btn-primary-nodal" onClick={clearFilters}>
+                RESET PARAMETERS
+              </button>
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

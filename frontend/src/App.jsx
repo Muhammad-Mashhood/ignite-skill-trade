@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { useAuth } from './contexts/AuthContext';
 
 // Pages
@@ -24,6 +25,7 @@ import CreateCoursePage from './pages/CreateCoursePage';
 import MyCoursesPage from './pages/MyCoursesPage';
 import CourseDetailPage from './pages/CourseDetailPage';
 import CoursesPage from './pages/CoursesPage';
+import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Components
@@ -43,6 +45,18 @@ const AuthenticatedLayout = ({ children }) => {
   );
 };
 
+// Layout wrapper for public pages
+const PublicLayout = ({ children }) => {
+  return (
+    <>
+      <Navbar />
+      <div style={{ marginTop: '80px' }}>
+        {children}
+      </div>
+    </>
+  );
+};
+
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
 
@@ -52,7 +66,7 @@ function AppRoutes() {
       <Route 
         path="/" 
         element={
-          isAuthenticated ? <Navigate to="/feed" replace /> : <HomePage />
+          isAuthenticated ? <Navigate to="/feed" replace /> : <PublicLayout><HomePage /></PublicLayout>
         } 
       />
       
@@ -60,7 +74,9 @@ function AppRoutes() {
         path="/login" 
         element={
           <PublicRoute>
-            <LoginPage />
+            <PublicLayout>
+              <LoginPage />
+            </PublicLayout>
           </PublicRoute>
         } 
       />
@@ -68,12 +84,24 @@ function AppRoutes() {
         path="/register" 
         element={
           <PublicRoute>
-            <RegisterPage />
+            <PublicLayout>
+              <RegisterPage />
+            </PublicLayout>
           </PublicRoute>
         } 
       />
       
       {/* Protected Routes with Layout */}
+      <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <AuthenticatedLayout>
+              <DashboardPage />
+            </AuthenticatedLayout>
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/feed"
         element={
@@ -242,13 +270,15 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </ToastProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </ToastProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

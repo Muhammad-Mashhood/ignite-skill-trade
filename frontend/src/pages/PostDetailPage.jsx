@@ -1,5 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { 
+  ChevronLeft, 
+  User, 
+  Star, 
+  Eye, 
+  Heart, 
+  MessageSquare, 
+  Handshake, 
+  Edit3, 
+  Clock, 
+  Users, 
+  Target, 
+  BookOpen, 
+  GraduationCap,
+  ArrowRight,
+  Info,
+  Tag
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getPostById, createProposal } from '../services/api';
 import { useToast } from '../contexts/ToastContext';
@@ -45,7 +63,7 @@ const PostDetailPage = () => {
   const handleSubmitProposal = async (proposalData) => {
     try {
       await createProposal(proposalData);
-      showSuccess('Proposal sent successfully! 🎉');
+      showSuccess('Proposal sent successfully!');
       setIsProposalModalOpen(false);
     } catch (err) {
       throw new Error(err.message || 'Failed to send proposal');
@@ -53,7 +71,6 @@ const PostDetailPage = () => {
   };
 
   const handleSendMessage = () => {
-    // TODO: Navigate to chat
     if (!user) {
       showError('Please login to send messages');
       navigate('/login');
@@ -65,27 +82,20 @@ const PostDetailPage = () => {
   if (loading) {
     return (
       <div className="post-detail-loading">
-        <div className="loading-spinner"></div>
-        <p>Loading post details...</p>
+        <div className="nodal-loader"></div>
+        <p className="nodal-loader-text">Loading post...</p>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !post) {
     return (
       <div className="post-detail-error">
-        <h2>⚠️ Error</h2>
-        <p>{error}</p>
-        <button onClick={() => navigate(-1)}>Go Back</button>
-      </div>
-    );
-  }
-
-  if (!post) {
-    return (
-      <div className="post-detail-error">
-        <h2>Post not found</h2>
-        <button onClick={() => navigate(-1)}>Go Back</button>
+        <h2 className="editorial-title">{error ? 'Something went wrong' : 'Post not found'}</h2>
+        <p className="ledger-desc">{error || 'The requested resource could not be located in the registry.'}</p>
+        <button className="btn-back-nodal" onClick={() => navigate(-1)}>
+          <ChevronLeft size={16} /> Back to Posts
+        </button>
       </div>
     );
   }
@@ -95,59 +105,63 @@ const PostDetailPage = () => {
   return (
     <div className="post-detail-page">
       {/* Header Section */}
-      <div className="post-detail-header">
-        <button className="back-btn" onClick={() => navigate(-1)}>
-          ← Back
-        </button>
+      <div className="post-detail-hero">
+        <div className="hero-nodal-nav">
+          <button className="btn-back-nodal" onClick={() => navigate(-1)}>
+            <ChevronLeft size={14} /> Back
+          </button>
+        </div>
         
-        <div className="header-content">
-          <div className="header-main">
-            <div className="post-type-badge">
-              🔄 Skill Trade
+        <div className="hero-content">
+          <div className="hero-labels">
+            <span className="editorial-label">Skill Exchange</span>
+            <span className="separator">•</span>
+            <span className="editorial-label">ID_{id.substring(0, 8).toUpperCase()}</span>
+          </div>
+          <h1 className="editorial-title">{post.title}</h1>
+          
+          <div className="post-nodal-meta">
+            <div className="creator-nodal">
+              <img
+                src={post.user?.avatar || '/default-avatar.png'}
+                alt={post.user?.name}
+                className="nodal-avatar-small"
+              />
+              <div className="instructor-text">
+                <span className="label-minimal">ORIGINATOR</span>
+                <span className="creator-name-text">{post.user?.name || 'ANONYMOUS'}</span>
+              </div>
             </div>
-            <h1>{post.title}</h1>
             
-            <div className="post-meta">
-              <div className="creator-info">
-                <div className="creator-avatar">
-                  {post.user?.avatar ? (
-                    <img src={post.user.avatar} alt={post.user.name} />
-                  ) : (
-                    <div className="avatar-placeholder">
-                      {post.user?.name?.charAt(0)?.toUpperCase() || '?'}
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <p className="creator-name">{post.user?.name || 'Anonymous'}</p>
-                  <p className="creator-rating">
-                    ⭐ {post.user?.rating?.average?.toFixed(1) || 'New'} 
-                    {post.user?.rating?.count > 0 && ` (${post.user.rating.count})`}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="post-stats">
-                <span>👁️ {post.stats?.views || 0} views</span>
-                <span>❤️ {post.stats?.interests || 0} interested</span>
-              </div>
+            <div className="rating-nodal">
+              <Star size={16} fill="var(--accent)" color="var(--accent)" />
+              <span className="rating-value">{post.user?.rating?.average?.toFixed(1) || 'NEW'}</span>
+              <span className="rating-count">({post.user?.rating?.count || 0} REVIEWS)</span>
             </div>
 
-            {/* Action Buttons */}
-            {!isOwner && (
-              <div className="action-buttons">
-                <button className="propose-btn" onClick={handleProposeSkillTrade}>
-                  🤝 Propose Skill Trade
+            <div className="post-stats-nodal">
+              <div className="stat-pill">
+                <Eye size={12} /> <span>{post.stats?.views || 0}</span>
+              </div>
+              <div className="stat-pill">
+                <Heart size={12} /> <span>{post.stats?.interests || 0}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="hero-actions">
+            {!isOwner ? (
+              <div className="action-cluster">
+                <button className="btn-propose-nodal" onClick={handleProposeSkillTrade}>
+                  <Handshake size={18} /> Send a Proposal
                 </button>
-                <button className="message-btn" onClick={handleSendMessage}>
-                  💬 Send Message
+                <button className="btn-message-nodal" onClick={handleSendMessage}>
+                  <MessageSquare size={18} /> Message
                 </button>
               </div>
-            )}
-
-            {isOwner && (
-              <button className="edit-btn" onClick={() => navigate(`/posts/edit/${id}`)}>
-                ✏️ Edit Post
+            ) : (
+              <button className="btn-edit-nodal" onClick={() => navigate(`/posts/edit/${id}`)}>
+                <Edit3 size={18} /> Edit Post
               </button>
             )}
           </div>
@@ -155,228 +169,242 @@ const PostDetailPage = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="post-detail-tabs">
+      <div className="post-detail-tabs-nodal">
         <button 
-          className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
+          className={`tab-nodal ${activeTab === 'overview' ? 'active' : ''}`}
           onClick={() => setActiveTab('overview')}
         >
-          Overview
+          01 OVERVIEW
         </button>
         <button 
-          className={`tab ${activeTab === 'skills' ? 'active' : ''}`}
+          className={`tab-nodal ${activeTab === 'skills' ? 'active' : ''}`}
           onClick={() => setActiveTab('skills')}
         >
-          Skills Details
+          02 Skills
         </button>
         <button 
-          className={`tab ${activeTab === 'about' ? 'active' : ''}`}
+          className={`tab-nodal ${activeTab === 'about' ? 'active' : ''}`}
           onClick={() => setActiveTab('about')}
         >
-          About Creator
+          03 About
         </button>
       </div>
 
       {/* Content Area */}
-      <div className="post-detail-content">
-        {/* Overview Tab */}
+      <div className="post-detail-content-ledger">
         {activeTab === 'overview' && (
-          <div className="overview-tab">
-            {/* Skills Summary */}
-            {((post.willTeach && post.willTeach.length > 0) || (post.wantToLearn && post.wantToLearn.length > 0)) && (
-              <section className="content-section skills-summary">
-                <h2>🎯 Skills Overview</h2>
-                <div className="skills-overview-grid">
-                  {post.willTeach && post.willTeach.length > 0 && (
-                    <div className="skills-overview-column">
-                      <h3 className="teach-header">🎓 Will Teach</h3>
-                      <div className="skills-badges">
-                        {post.willTeach.map((skill, index) => (
-                          <span key={index} className="skill-badge teach-badge">
-                            {skill.customSkillName || skill.skill?.name}
-                            {skill.level && <span className="skill-level"> • {skill.level}</span>}
-                          </span>
-                        ))}
+          <div className="overview-ledger">
+            {/* Skills Matrix */}
+            <section className="ledger-section">
+              <div className="section-header">
+                <span className="section-number">01.1</span>
+                <h2 className="section-title">Skills</h2>
+              </div>
+              <div className="skills-matrix-grid">
+                <div className="matrix-column teach">
+                  <div className="matrix-header">
+                    <GraduationCap size={16} /> <span>Skill Offered</span>
+                  </div>
+                  <div className="matrix-list">
+                    {post.willTeach?.map((skill, index) => (
+                      <div key={index} className="matrix-item">
+                        <span className="matrix-skill">{skill.customSkillName || skill.skill?.name}</span>
+                        <span className="matrix-level">{skill.level?.toUpperCase()}</span>
                       </div>
-                    </div>
-                  )}
-                  {post.wantToLearn && post.wantToLearn.length > 0 && (
-                    <div className="skills-overview-column">
-                      <h3 className="learn-header">📚 Want to Learn</h3>
-                      <div className="skills-badges">
-                        {post.wantToLearn.map((skill, index) => (
-                          <span key={index} className="skill-badge learn-badge">
-                            {skill.customSkillName || skill.skill?.name}
-                            {skill.level && <span className="skill-level"> • {skill.level}</span>}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    ))}
+                  </div>
                 </div>
-              </section>
-            )}
+                <div className="matrix-column learn">
+                  <div className="matrix-header">
+                    <BookOpen size={16} /> <span>Wants to Learn</span>
+                  </div>
+                  <div className="matrix-list">
+                    {post.wantToLearn?.map((skill, index) => (
+                      <div key={index} className="matrix-item">
+                        <span className="matrix-skill">{skill.customSkillName || skill.skill?.name}</span>
+                        <span className="matrix-level">{skill.level?.toUpperCase()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
 
-            <section className="content-section">
-              <h2>Description</h2>
-              <p className="description-text">{post.description}</p>
+            <section className="ledger-section">
+              <div className="section-header">
+                <span className="section-number">01.2</span>
+                <h2 className="section-title">SPECIFICATIONS</h2>
+              </div>
+              <p className="description-text-editorial">{post.description}</p>
             </section>
 
             {post.requirements && post.requirements.length > 0 && (
-              <section className="content-section">
-                <h2>📋 Requirements</h2>
-                <ul className="requirements-list">
+              <section className="ledger-section">
+                <div className="section-header">
+                  <span className="section-number">01.3</span>
+                  <h2 className="section-title">PREREQUISITES</h2>
+                </div>
+                <ul className="editorial-check-list">
                   {post.requirements.map((req, index) => (
-                    <li key={index}>{req}</li>
+                    <li key={index}><ArrowRight size={12} /> {req}</li>
                   ))}
                 </ul>
               </section>
             )}
 
             {post.outcomes && post.outcomes.length > 0 && (
-              <section className="content-section">
-                <h2>🎯 Learning Outcomes</h2>
-                <ul className="outcomes-list">
+              <section className="ledger-section">
+                <div className="section-header">
+                  <span className="section-number">01.4</span>
+                  <h2 className="section-title">What You'll Get</h2>
+                </div>
+                <ul className="editorial-check-list">
                   {post.outcomes.map((outcome, index) => (
-                    <li key={index}>{outcome}</li>
+                    <li key={index}><Target size={12} /> {outcome}</li>
                   ))}
                 </ul>
               </section>
             )}
 
-            {post.tags && post.tags.length > 0 && (
-              <section className="content-section">
-                <h2>🏷️ Tags</h2>
-                <div className="tags-container">
-                  {post.tags.map((tag, index) => (
-                    <span key={index} className="tag-badge">{tag}</span>
-                  ))}
+            <div className="ledger-meta-grid">
+              {(post.duration || post.maxParticipants) && (
+                <div className="meta-nodal-card">
+                  <div className="meta-card-header">
+                    <Info size={14} /> <span>Details</span>
+                  </div>
+                  <div className="meta-data-rows">
+                    {post.duration && (
+                      <div className="meta-data-row">
+                        <Clock size={14} />
+                        <span className="meta-label">Session Length</span>
+                        <span className="meta-value">{post.duration} MIN</span>
+                      </div>
+                    )}
+                    {post.maxParticipants && (
+                      <div className="meta-data-row">
+                        <Users size={14} />
+                        <span className="meta-label">MAX_CAPACITY</span>
+                        <span className="meta-value">{post.maxParticipants} NODES</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </section>
-            )}
+              )}
 
-            {(post.duration || post.maxParticipants) && (
-              <section className="content-section">
-                <h2>📊 Details</h2>
-                <div className="details-grid">
-                  {post.duration && (
-                    <div className="detail-item">
-                      <span className="detail-icon">⏱️</span>
-                      <div>
-                        <p className="detail-label">Session Duration</p>
-                        <p className="detail-value">{post.duration} minutes</p>
-                      </div>
-                    </div>
-                  )}
-                  {post.maxParticipants && (
-                    <div className="detail-item">
-                      <span className="detail-icon">👥</span>
-                      <div>
-                        <p className="detail-label">Max Participants</p>
-                        <p className="detail-value">{post.maxParticipants} people</p>
-                      </div>
-                    </div>
-                  )}
+              {post.tags && post.tags.length > 0 && (
+                <div className="meta-nodal-card">
+                  <div className="meta-card-header">
+                    <Tag size={14} /> <span>Tags</span>
+                  </div>
+                  <div className="tags-nodal-cluster">
+                    {post.tags.map((tag, index) => (
+                      <span key={index} className="nodal-tag">{tag.toUpperCase()}</span>
+                    ))}
+                  </div>
                 </div>
-              </section>
-            )}
+              )}
+            </div>
           </div>
         )}
 
-        {/* Skills Tab */}
         {activeTab === 'skills' && (
-          <div className="skills-tab">
-            {/* Will Teach Section */}
-            {post.willTeach && post.willTeach.length > 0 && (
-              <section className="content-section teach-section">
-                <h2>🎓 Skills They Will Teach</h2>
-                <div className="skills-grid">
-                  {post.willTeach.map((skill, index) => (
-                    <div key={index} className="skill-card teach-card">
-                      <div className="skill-card-header">
-                        <h3>{skill.customSkillName || skill.skill?.name}</h3>
-                        <span className="skill-level-badge">{skill.level}</span>
-                      </div>
-                      {skill.description && (
-                        <p className="skill-description">{skill.description}</p>
-                      )}
+          <div className="skills-ledger">
+            <section className="ledger-section">
+              <div className="section-header">
+                <span className="section-number">02.1</span>
+                <h2 className="section-title">About This Offer</h2>
+              </div>
+              <div className="skills-editorial-grid">
+                {post.willTeach?.map((skill, index) => (
+                  <div key={index} className="skill-nodal-profile teach">
+                    <div className="profile-header">
+                      <h3>{skill.customSkillName || skill.skill?.name}</h3>
+                      <span className="level-badge-nodal">{skill.level?.toUpperCase()}</span>
                     </div>
-                  ))}
-                </div>
-              </section>
-            )}
+                    {skill.description && <p className="profile-desc">{skill.description}</p>}
+                  </div>
+                ))}
+              </div>
+            </section>
 
-            {/* Want to Learn Section */}
-            {post.wantToLearn && post.wantToLearn.length > 0 && (
-              <section className="content-section learn-section">
-                <h2>📚 Skills They Want to Learn</h2>
-                <div className="skills-grid">
-                  {post.wantToLearn.map((skill, index) => (
-                    <div key={index} className="skill-card learn-card">
-                      <div className="skill-card-header">
-                        <h3>{skill.customSkillName || skill.skill?.name}</h3>
-                        <span className="skill-level-badge">{skill.level}</span>
-                      </div>
-                      {skill.description && (
-                        <p className="skill-description">{skill.description}</p>
-                      )}
+            <section className="ledger-section">
+              <div className="section-header">
+                <span className="section-number">02.2</span>
+                <h2 className="section-title">Learning Goals</h2>
+              </div>
+              <div className="skills-editorial-grid">
+                {post.wantToLearn?.map((skill, index) => (
+                  <div key={index} className="skill-nodal-profile learn">
+                    <div className="profile-header">
+                      <h3>{skill.customSkillName || skill.skill?.name}</h3>
+                      <span className="level-badge-nodal">{skill.level?.toUpperCase()}</span>
                     </div>
-                  ))}
-                </div>
-              </section>
-            )}
+                    {skill.description && <p className="profile-desc">{skill.description}</p>}
+                  </div>
+                ))}
+              </div>
+            </section>
 
-            {/* Trade Match Suggestion */}
             {!isOwner && (
-              <section className="content-section trade-suggestion">
-                <div className="suggestion-box">
-                  <h3>💡 Perfect Match?</h3>
-                  <p>If you can teach what they want to learn, or want to learn what they teach, propose a skill trade!</p>
-                  <button className="propose-btn-large" onClick={handleProposeSkillTrade}>
-                    🤝 Propose Skill Trade
+              <div className="match-callout-nodal">
+                <div className="callout-content">
+                  <Zap size={32} className="pulse" />
+                  <div className="callout-text">
+                    <h3>You're a great match!</h3>
+                    <p>Think you're a good fit? Send them a proposal and get the skill exchange started.</p>
+                  </div>
+                  <button className="btn-propose-primary" onClick={handleProposeSkillTrade}>
+                    Send a Proposal <ArrowRight size={16} />
                   </button>
                 </div>
-              </section>
+              </div>
             )}
           </div>
         )}
 
-        {/* About Creator Tab */}
         {activeTab === 'about' && (
-          <div className="about-tab">
-            <section className="content-section">
-              <div className="creator-profile">
-                <div className="creator-avatar-large">
-                  {post.user?.avatar ? (
-                    <img src={post.user.avatar} alt={post.user.name} />
-                  ) : (
-                    <div className="avatar-placeholder-large">
-                      {post.user?.name?.charAt(0)?.toUpperCase() || '?'}
+          <div className="about-ledger">
+            <section className="ledger-section">
+              <div className="creator-profile-nodal">
+                <div className="profile-hero">
+                  <img
+                    src={post.user?.avatar || '/default-avatar.png'}
+                    alt={post.user?.name}
+                    className="nodal-avatar-large"
+                  />
+                  <div className="profile-identity">
+                    <h2 className="creator-title">{post.user?.name || 'Unknown User'}</h2>
+                    <div className="creator-metrics">
+                      <div className="metric-box">
+                        <span className="metric-label">Rating</span>
+                        <span className="metric-value">
+                          <Star size={14} fill="var(--accent)" /> {post.user?.rating?.average?.toFixed(1) || 'NEW'}
+                        </span>
+                      </div>
+                      <div className="metric-box">
+                        <span className="metric-label">Trades Done</span>
+                        <span className="metric-value">{post.user?.rating?.count || 0}</span>
+                      </div>
                     </div>
-                  )}
-                </div>
-                <h2>{post.user?.name || 'Anonymous'}</h2>
-                <div className="creator-stats">
-                  <div className="stat">
-                    <span className="stat-label">Rating</span>
-                    <span className="stat-value">
-                      ⭐ {post.user?.rating?.average?.toFixed(1) || 'New'}
-                    </span>
-                  </div>
-                  <div className="stat">
-                    <span className="stat-label">Reviews</span>
-                    <span className="stat-value">{post.user?.rating?.count || 0}</span>
                   </div>
                 </div>
                 {post.user?.bio && (
-                  <p className="creator-bio">{post.user.bio}</p>
+                  <div className="profile-bio-section">
+                    <span className="label-minimal">About</span>
+                    <p className="description-text-editorial">{post.user.bio}</p>
+                  </div>
                 )}
+                <div className="profile-actions">
+                  <button className="btn-secondary-nodal" onClick={() => navigate(`/profile/${post.user._id}`)}>
+                    View Profile <ArrowRight size={14} />
+                  </button>
+                </div>
               </div>
             </section>
           </div>
         )}
       </div>
 
-      {/* Proposal Modal */}
       <ProposalModal
         isOpen={isProposalModalOpen}
         onClose={() => setIsProposalModalOpen(false)}

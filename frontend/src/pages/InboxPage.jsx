@@ -1,5 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Search, 
+  MessageSquare, 
+  User, 
+  Clock, 
+  Inbox, 
+  ArrowRight, 
+  AlertCircle,
+  FileText,
+  ChevronRight,
+  MoreVertical,
+  Zap,
+  Star
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { getConversations } from '../services/api';
 import './InboxPage.css';
@@ -21,9 +35,7 @@ const InboxPage = () => {
       setLoading(true);
       setError('');
       const response = await getConversations();
-      console.log('Conversations response:', response);
       
-      // Handle different response formats
       let conversationsData = [];
       if (Array.isArray(response)) {
         conversationsData = response;
@@ -33,11 +45,10 @@ const InboxPage = () => {
         conversationsData = response.conversations;
       }
       
-      console.log('Parsed conversations:', conversationsData);
       setConversations(conversationsData);
     } catch (err) {
       console.error('Error fetching conversations:', err);
-      setError(err.message || 'Failed to load conversations');
+      setError(err.message || 'Failed to load transmission logs');
     } finally {
       setLoading(false);
     }
@@ -45,7 +56,6 @@ const InboxPage = () => {
 
   const formatTimestamp = (date) => {
     if (!date) return '';
-    
     const now = new Date();
     const messageDate = new Date(date);
     const diffInMs = now - messageDate;
@@ -58,11 +68,7 @@ const InboxPage = () => {
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInDays === 1) return 'Yesterday';
     if (diffInDays < 7) return `${diffInDays}d ago`;
-    
-    return messageDate.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric' 
-    });
+    return messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
   };
 
   const handleConversationClick = (conversation) => {
@@ -73,23 +79,19 @@ const InboxPage = () => {
 
   const filteredConversations = conversations.filter(conv => {
     if (!searchTerm.trim()) return true;
-    
     const searchLower = searchTerm.toLowerCase();
     const otherUserName = conv.otherUser?.name?.toLowerCase() || '';
     const otherUserEmail = conv.otherUser?.email?.toLowerCase() || '';
     const lastMessageContent = conv.lastMessage?.content?.toLowerCase() || '';
-    
-    return otherUserName.includes(searchLower) || 
-           otherUserEmail.includes(searchLower) ||
-           lastMessageContent.includes(searchLower);
+    return otherUserName.includes(searchLower) || otherUserEmail.includes(searchLower) || lastMessageContent.includes(searchLower);
   });
 
-  if (loading) {
+  if (loading && conversations.length === 0) {
     return (
       <div className="inbox-page">
-        <div className="inbox-loading">
-          <div className="spinner"></div>
-          <p>Loading conversations...</p>
+        <div className="editorial-loader">
+          <div className="loader-bar"></div>
+          <span className="loader-text">Loading messages...</span>
         </div>
       </div>
     );
@@ -97,95 +99,105 @@ const InboxPage = () => {
 
   return (
     <div className="inbox-page">
-      <div className="inbox-container">
-        <div className="inbox-header">
-          <h1>📬 Inbox</h1>
-          <div className="inbox-search">
+      <header className="inbox-hero">
+        <div className="hero-content">
+          <h1 className="editorial-title">Messages</h1>
+          <p className="editorial-subtitle">Your conversations and skill exchange chats.</p>
+        </div>
+        <div className="hero-search-cluster">
+          <div className="search-input-wrapper">
+            <Search size={16} />
             <input
               type="text"
-              placeholder="Search conversations..."
+              placeholder="FILTER SIGNALS..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
         </div>
+      </header>
 
+      <div className="inbox-main">
         {error && (
-          <div className="inbox-error">
-            <p>⚠️ {error}</p>
-            <button onClick={fetchConversations}>Try Again</button>
+          <div className="editorial-error-card">
+            <AlertCircle size={24} />
+            <div className="error-content">
+              <h3>TRANSMISSION ERROR</h3>
+              <p>{error}</p>
+            </div>
+            <button onClick={fetchConversations} className="btn-retry">RETRY</button>
           </div>
         )}
 
         {!error && filteredConversations.length === 0 && (
-          <div className="inbox-empty">
-            {searchTerm ? (
-              <>
-                <p className="empty-icon">🔍</p>
-                <h3>No conversations found</h3>
-                <p>Try a different search term</p>
-              </>
-            ) : (
-              <>
-                <p className="empty-icon">💬</p>
-                <h3>No messages yet</h3>
-                <p>Start a conversation by sending a message from a post or proposal</p>
-                <button onClick={() => navigate('/posts')} className="btn-primary">
-                  Browse Posts
-                </button>
-              </>
+          <div className="inbox-empty-state">
+            <div className="empty-visual">
+              {searchTerm ? <Search size={64} strokeWidth={1} /> : <MessageSquare size={64} strokeWidth={1} />}
+            </div>
+            <h3>{searchTerm ? 'No results found' : 'No messages yet'}</h3>
+            <p>{searchTerm ? 'Try a different search term.' : 'Start a conversation by visiting a post or profile.'}</p>
+            {!searchTerm && (
+              <button onClick={() => navigate('/posts')} className="editorial-btn-primary">
+                <span>Browse Posts</span>
+                <ArrowRight size={14} />
+              </button>
             )}
           </div>
         )}
 
-        <div className="conversations-list">
+        <div className="conversations-ledger">
           {filteredConversations.map((conversation) => (
             <div
               key={conversation._id}
-              className={`conversation-item ${conversation.unreadCount > 0 ? 'unread' : ''}`}
+              className={`ledger-item ${conversation.unreadCount > 0 ? 'unread' : ''}`}
               onClick={() => handleConversationClick(conversation)}
             >
-              <div className="conversation-avatar">
-                {conversation.otherUser?.avatar ? (
-                  <img src={conversation.otherUser.avatar} alt={conversation.otherUser.name} />
-                ) : (
-                  <div className="avatar-placeholder">
-                    {conversation.otherUser?.name?.charAt(0).toUpperCase() || '?'}
-                  </div>
-                )}
-                {conversation.unreadCount > 0 && (
-                  <span className="unread-badge">{conversation.unreadCount}</span>
-                )}
+              <div className="item-nodal">
+                <div className="avatar-nodal">
+                  {conversation.otherUser?.avatar ? (
+                    <img src={conversation.otherUser.avatar} alt={conversation.otherUser.name} />
+                  ) : (
+                    <User size={18} />
+                  )}
+                  {conversation.unreadCount > 0 && (
+                    <span className="unread-pulse"></span>
+                  )}
+                </div>
               </div>
 
-              <div className="conversation-content">
-                <div className="conversation-header-row">
-                  <h3 className="conversation-name">
-                    {conversation.otherUser?.name || 'Unknown User'}
-                  </h3>
-                  <span className="conversation-time">
+              <div className="item-content">
+                <div className="content-header">
+                  <div className="participant-row">
+                    <h3 className="name">{conversation.otherUser?.name || 'ANONYMOUS'}</h3>
+                    {conversation.unreadCount > 0 && <span className="unread-tag">{conversation.unreadCount} NEW</span>}
+                  </div>
+                  <span className="timestamp">
+                    <Clock size={10} />
                     {formatTimestamp(conversation.lastMessageAt)}
                   </span>
                 </div>
 
-                <div className="conversation-preview">
+                <div className="content-preview">
                   {conversation.lastMessage?.content ? (
                     <p className={conversation.unreadCount > 0 ? 'unread-text' : ''}>
-                      {conversation.lastMessage.sender === user?._id ? 'You: ' : ''}
-                      {conversation.lastMessage.content.length > 60
-                        ? conversation.lastMessage.content.substring(0, 60) + '...'
-                        : conversation.lastMessage.content}
+                      {conversation.lastMessage.sender === user?._id && <span className="prefix">YOU:</span>}
+                      {conversation.lastMessage.content}
                     </p>
                   ) : (
-                    <p className="no-messages">No messages yet</p>
+                    <p className="no-messages">SIGNAL READY FOR INITIALIZATION</p>
                   )}
                 </div>
 
                 {conversation.relatedPost && (
-                  <div className="conversation-context">
-                    📄 Related to: {conversation.relatedPost.title}
+                  <div className="content-context">
+                    <FileText size={10} />
+                    <span>OBJECTIVE: {conversation.relatedPost.title.toUpperCase()}</span>
                   </div>
                 )}
+              </div>
+
+              <div className="item-actions">
+                <ChevronRight size={18} className="chevron" />
               </div>
             </div>
           ))}
