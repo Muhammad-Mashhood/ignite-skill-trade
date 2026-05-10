@@ -1,4 +1,3 @@
-const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
@@ -23,15 +22,14 @@ exports.generateUrduDubbing = async (text, voiceId = URDU_VOICE_ID) => {
 
     console.log('🎙️ Generating Urdu dubbing with ElevenLabs...');
 
-    const response = await axios({
+    const response = await fetch(`${ELEVENLABS_API_URL}/text-to-speech/${voiceId}`, {
       method: 'POST',
-      url: `${ELEVENLABS_API_URL}/text-to-speech/${voiceId}`,
       headers: {
         'Accept': 'audio/mpeg',
         'Content-Type': 'application/json',
         'xi-api-key': ELEVENLABS_API_KEY,
       },
-      data: {
+      body: JSON.stringify({
         text: text,
         model_id: 'eleven_multilingual_v2', // Supports Urdu
         voice_settings: {
@@ -40,22 +38,28 @@ exports.generateUrduDubbing = async (text, voiceId = URDU_VOICE_ID) => {
           style: 0.0,
           use_speaker_boost: true,
         },
-      },
-      responseType: 'arraybuffer',
+      }),
     });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail?.message || `HTTP error! status: ${response.status}`);
+    }
+
+    const audioBuffer = Buffer.from(await response.arrayBuffer());
 
     console.log('✅ Urdu dubbing generated successfully');
 
     return {
       success: true,
-      audioBuffer: response.data,
+      audioBuffer: audioBuffer,
       contentType: 'audio/mpeg',
     };
   } catch (error) {
-    console.error('❌ Error generating Urdu dubbing:', error.response?.data || error.message);
+    console.error('❌ Error generating Urdu dubbing:', error.message);
     return {
       success: false,
-      message: error.response?.data?.detail?.message || error.message,
+      message: error.message,
     };
   }
 };
@@ -70,15 +74,17 @@ exports.getAvailableVoices = async () => {
       return [];
     }
 
-    const response = await axios({
+    const response = await fetch(`${ELEVENLABS_API_URL}/voices`, {
       method: 'GET',
-      url: `${ELEVENLABS_API_URL}/voices`,
       headers: {
         'xi-api-key': ELEVENLABS_API_KEY,
       },
     });
 
-    return response.data.voices || [];
+    if (!response.ok) return [];
+    
+    const data = await response.json();
+    return data.voices || [];
   } catch (error) {
     console.error('Error fetching voices:', error.message);
     return [];
@@ -157,19 +163,24 @@ exports.getUsageInfo = async () => {
       return { configured: false };
     }
 
-    const response = await axios({
+    const response = await fetch(`${ELEVENLABS_API_URL}/user`, {
       method: 'GET',
-      url: `${ELEVENLABS_API_URL}/user`,
       headers: {
         'xi-api-key': ELEVENLABS_API_KEY,
       },
     });
 
+    if (!response.ok) {
+      return { configured: true, error: `HTTP error! status: ${response.status}` };
+    }
+
+    const data = await response.json();
+
     return {
       configured: true,
-      subscription: response.data.subscription,
-      characterCount: response.data.character_count,
-      characterLimit: response.data.character_limit,
+      subscription: data.subscription,
+      characterCount: data.character_count,
+      characterLimit: data.character_limit,
     };
   } catch (error) {
     console.error('Error fetching usage info:', error.message);
